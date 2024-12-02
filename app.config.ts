@@ -53,14 +53,7 @@ function docsData() {
 export default defineConfig({
 	middleware: "src/middleware/index.ts",
 	server: {
-		preset: "netlify",
-		prerender: {
-			crawlLinks: true,
-			autoSubfolderIndex: false,
-			failOnError: true,
-			// eslint-disable-next-line no-useless-escape
-			ignore: [/\{\getPath}/, /.*?emojiSvg\(.*/],
-		},
+		preset: "vercel",
 	},
 	extensions: ["mdx", "md", "tsx"],
 	vite: () => ({
