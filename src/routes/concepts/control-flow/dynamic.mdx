@@ -1,27 +1,26 @@
 ---
-title: "Dynamic"
+title: "动态组件渲染"
 order: 2
 ---
 
-`<Dynamic>` is a Solid component that allows you to render components dynamically based on data.
-By passing either a string representing a [native HTML element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element) or a component function to the `component` prop, you can render the chosen component with the remaining props you provide.
+`<Dynamic>` 是一个 Solid 组件，允许您根据数据动态渲染组件。通过将表示[原生 HTML 元素](https://developer.mozilla.org/en-US/docs/Web/HTML/Element)的字符串或组件函数传递给 `component` 属性，您可以选择最终要渲染的组件。
 
 ```jsx
-import { createSignal, For } from "solid-js"
-import { Dynamic } from "solid-js/web"
+import { createSignal, For } from "solid-js";
+import { Dynamic } from "solid-js/web";
 
-const RedDiv = () => <div style="color: red">Red</div>
-const GreenDiv = () => <div style="color: green">Green</div>
-const BlueDiv = () => <div style="color: blue">Blue</div>
+const RedDiv = () => <div style="color: red">Red</div>;
+const GreenDiv = () => <div style="color: green">Green</div>;
+const BlueDiv = () => <div style="color: blue">Blue</div>;
 
 const options = {
 	red: RedDiv,
 	green: GreenDiv,
 	blue: BlueDiv,
-}
+};
 
 function App() {
-	const [selected, setSelected] = createSignal("red")
+	const [selected, setSelected] = createSignal("red");
 
 	return (
 		<>
@@ -30,36 +29,34 @@ function App() {
 				onInput={(e) => setSelected(e.currentTarget.value)}
 			>
 				<For each={Object.keys(options)}>
-					{(color) => <option value={color}>{color}</option>} 
+					{(color) => <option value={color}>{color}</option>}
 				</For>
 			</select>
 			<Dynamic component={options[selected()]} />
 		</>
-	)
+	);
 }
 ```
 
-This example renders a `<select>` element that allows you to choose between three colors.
-Once a color is selected, the `<Dynamic>` component will render the chosen color's corresponding component or element.
+这个例子渲染了一个 `<select>` 元素，允许您在三种颜色之间进行选择。一旦选择了颜色，`<Dynamic>` 组件将渲染所选颜色的对应组件或元素。
 
-`<Dynamic>` creates more concise code than alternative conditional rendering options.
-For example, the following code renders the same result as the previous example:
+`<Dynamic>` 比其他条件渲染拥有更简洁的代码。例如，以下代码渲染的结果与前面的示例相同：
 
 ```jsx
-import { createSignal, Switch, Match, For } from "solid-js"
+import { createSignal, Switch, Match, For } from "solid-js";
 
-const RedDiv = () => <div style="color: red">Red</div>
-const GreenDiv = () => <div style="color: green">Green</div>
-const BlueDiv = () => <div style="color: blue">Blue</div>
+const RedDiv = () => <div style="color: red">Red</div>;
+const GreenDiv = () => <div style="color: green">Green</div>;
+const BlueDiv = () => <div style="color: blue">Blue</div>;
 
 const options = {
 	red: RedDiv,
 	green: GreenDiv,
 	blue: BlueDiv,
-}
+};
 
 function App() {
-	const [selected, setSelected] = createSignal("red")
+	const [selected, setSelected] = createSignal("red");
 
 	return (
 		<>
@@ -68,7 +65,7 @@ function App() {
 				onInput={(e) => setSelected(e.currentTarget.value)}
 			>
 				<For each={Object.keys(options)}>
-					{(color) => <option value={color}>{color}</option>} 
+					{(color) => <option value={color}>{color}</option>}
 				</For>
 			</select>
 			<Switch fallback={<BlueDiv />}>
@@ -80,23 +77,22 @@ function App() {
 				</Match>
 			</Switch>
 		</>
-	)
+	);
 }
 ```
 
-Instead of a more verbose [`<Switch>` and `<Match>`](/concepts/control-flow/conditional-rendering) statement, `<Dynamic>` offers a more concise way to render components dynamically.
+`<Dynamic>` 提供了一种更简洁的动态渲染组件的方式，而不是更详细的 [`<Switch>`](/concepts/control-flow/conditional-rendering) 和 [`<Match>`](/concepts/control-flow/conditional-rendering) 语句。
 
 ## Props
 
-When working with these components, you can pass [props](/concepts/components/props) to the component you are rendering by passing them to the `<Dynamic>` component.
-This makes them available to the component you are rendering, similar to how you would pass props to components in JSX.
+使用这些组件时，您可以通过将 [props](/concepts/components/props) 传递给 `<Dynamic>` 组件来将它们传递给正在渲染的组件，类似于在 JSX 中将 props 传递给组件的方式。
 
 ```jsx
-import { Dynamic } from "solid-js/web"
+import { Dynamic } from "solid-js/web";
 
 function App() {
-	return (
-		<Dynamic component={someComponent} someProp="someValue" />
-	)
+	return <Dynamic component={someComponent} someProp="someValue" />;
 }
 ```
+
+译者注：也就是说，在这个例子中，someComponent 中的组件可以访问到 someProp="someValue"

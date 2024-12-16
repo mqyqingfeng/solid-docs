@@ -143,7 +143,7 @@ export const Layout: ParentComponent<{ isError?: boolean }> = (props) => {
 			<PageStateProvider>
 				<div class="relative dark:bg-slate-900 bg-slate-50">
 					<Alert.Root class="dark:text-slate-900 text-white text-center p-1 font-semibold border-blue-50 dark:border-blue-600 bg-[rgb(14,142,231)] dark:bg-[rgb(162,222,255)]">
-						These docs are currently in Beta!
+						这些文档目前还在 Beta 阶段！
 					</Alert.Root>
 					<Show when={entries()}>
 						{(data) => <MainHeader tree={data().tree} />}

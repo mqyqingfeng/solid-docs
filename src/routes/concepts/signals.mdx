@@ -1,18 +1,15 @@
 ---
-title: Signals
+title: 信号
 order: 2
 ---
 
-Signals are the primary means of [managing state](/concepts/intro-to-reactivity#state-management) in your Solid application.
-They provide a way to store and update values, and are the foundation of [reactivity](/concepts/intro-to-reactivity) in Solid.
+信号是 Solid 应用程序中[管理状态](/concepts/intro-to-reactivity#state-management)的主要方式。它提供了一种存储和更新值的方法，并且是 Solid [响应式](/concepts/intro-to-reactivity)的基础。
 
-Signals can be used to represent any kind of state in your application, such as the current user, the current page, or the current theme.
-This can be any value, including primitive values such as strings and numbers, or complex values such as objects and arrays.
+信号可用于表示应用程序中的任何类型的状态，例如当前用户、当前页面或当前主题。这可以是任何值，包括字符串和数字等原始值，或对象和数组等复杂值。
 
-## Creating a signal
+## 创建一个信号
 
-You can create a signal by calling the [`createSignal`](/reference/basic-reactivity/create-signal) function, which is imported from `solid-js`.
-This function takes an initial value as an argument, and returns a pair of functions: a **getter** function, and a **setter** function.
+您可以通过调用从 `solid-js` 导入的 [createSignal](/reference/basic-reactivity/create-signal) 函数来创建信号。该函数传入一个初始值，并返回一对函数：一个 **getter** 函数和一个 **setter** 函数。
 
 ```jsx
 import { createSignal } from "solid-js";
@@ -22,26 +19,23 @@ const [count, setCount] = createSignal(0);
 ```
 
     	<Callout>
-    	  The syntax using `[` and `]` is called [array destructuring](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment).
+    	  使用 `[` and `]`的语法称为[数组解构](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)。
 
-This lets you extract values from the array.
-In the context of `createSignal`, the first value is the getter function, and the second value is the setter function.
+这使您可以从数组中提取值。在 createSignal 上下文中，第一个值是 getter 函数，第二个值是 setter 函数。
 
 </Callout>
 
-## Accessing values
+## 访问值
 
-The getter function returned by `createSignal` is used to access the value of the signal.
-You call this function with no arguments to get the current value of the signal:
+`createSignal` 返回的 getter 函数用于访问信号的值。您可以不带参数调用此函数来获取信号的当前值：
 
 ```jsx
 console.log(count()); // output: 0
 ```
 
-## Updating values
+## 更新值
 
-The setter function returned by `createSignal` is used to update the value of the signal.
-This function takes an argument that represents the new value of the signal:
+`createSignal` 返回的 `setter` 函数用于更新信号的值。该函数接收一个信号新值作为参数：
 
 ```jsx
 setCount(count() + 1);
@@ -49,7 +43,7 @@ setCount(count() + 1);
 console.log(count()); // output: 1
 ```
 
-The setter function can also take a function that passes the previous value.
+setter 函数还可以接收一个传递前一个值的函数：
 
 ```jsx
 setCount((prevCount) => prevCount + 1);
@@ -57,11 +51,9 @@ setCount((prevCount) => prevCount + 1);
 console.log(count()); // output: 1
 ```
 
-## Reactivity
+## 响应式
 
-Signals are reactive, which means that they automatically update when their value changes.
-When a signal is called within a [tracking scope](/concepts/intro-to-reactivity#tracking-changes), the signal adds the dependency to a list of subscribers.
-Once a signal's value changes, it notifies all of its dependencies of the change so they can re-evaluate their values and update accordingly.
+信号是响应式的，这意味着它们会在其值发生变化时自动更新。当在[追踪作用域](/concepts/intro-to-reactivity#tracking-changes)内调用信号时，该信号会将依赖项添加到订阅者列表中。一旦信号的值发生变化，它就会通知其所有依赖项发生变化，以便它们可以重新评估其值并进行相应更新。
 
 ```jsx
 function Counter() {
@@ -70,7 +62,7 @@ function Counter() {
 
 	return (
 		<div>
-			<span>Count: {count()}</span> {/* Updates when `count` changes */}
+			<span>Count: {count()}</span> {/* 当 `count` 改变时更新 */}
 			<button type="button" onClick={increment}>
 				Increment
 			</button>
@@ -80,11 +72,10 @@ function Counter() {
 ```
 
 <Callout>
-A tracking scope can be created by [`createEffect`](/reference/basic-reactivity/create-effect)  or [`createMemo`](/reference/basic-reactivity/create-memo), which are other Solid primitives.
+追踪作用域可以通过 [createEffect](/reference/basic-reactivity/create-effect) 或 [createMemo](/reference/basic-reactivity/create-memo) 创建。
 
-Both functions subscribe to the signals accessed within them, establishing a dependency relationship.
-Once this relationship is established, the function is notified whenever the signal changes.
+这两个函数都会订阅在函数内部访问的信号并建立依赖关系。一旦建立了这种关系，只要信号发生变化，该函数就会收到通知。
 
 </Callout>
 
-To learn more about how to use Signals in your application, visit our [state management guide](/guides/state-management).
+要了解如何在应用程序中使用信号的更多内容，请访问我们的[状态管理指南](/guides/state-management)。

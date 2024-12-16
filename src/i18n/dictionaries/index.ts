@@ -1,12 +1,13 @@
 import english from "./en/ui";
-// import ptbr from "./pt-br/ui";
+import chinese from "./zh/ui";
 
 export const dictionaries = {
-	default: english,
+	default: chinese,
 	// "pt-br": ptbr,
 };
 
 export const languages: { [key: string]: string } = {
 	en: "English",
+	zh: "简体中文",
 	// "pt-br": "Português do Brasil",
 };

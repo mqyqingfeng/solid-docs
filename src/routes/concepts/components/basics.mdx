@@ -1,12 +1,11 @@
 ---
-title: Basics
+title: 基础
 order: 4
 ---
 
-Components are the building blocks of Solid applications.
-These units are reusable and can be combined to create more complex applications.
+组件是 Solid 应用程序的构建基础。组件可复用并能组合创建更复杂的应用程序。
 
-Components are functions that return [JSX](/concepts/understanding-jsx) elements:
+组件是返回 [JSX](/concepts/understanding-jsx) 元素的函数：
 
 ```tsx
 function MyComponent() {
@@ -14,8 +13,7 @@ function MyComponent() {
 }
 ```
 
-A component can be as simple as a single element or as complex as a full page.
-They can also be nested within each other to create more intricate applications:
+组件可以像单个元素一样简单，也可以像一个页面一样复杂。组件还可以相互嵌套创建更复杂的应用程序：
 
 ```tsx
 function App() {
@@ -27,22 +25,18 @@ function App() {
 }
 ```
 
-## Component trees
+## 组件树
 
-A web page is displayed by rendering a component tree, which is a hierarchical structure of components.
-At the top of the tree is the primary application component, which is the root of the tree.
-Child components are nested within the primary component, and those components can have their own child components.
-This nesting can continue as needed.
+一个 Web 页面是通过渲染组件树来呈现的。组件树是指组件的层次结构。树的顶部是主应用程序组件，也是树的根。子组件嵌套在主组件内，这些组件也可以有自己的子组件。
 
-A simple application may have a component tree that looks like this:
+一个简单的应用程序可能有一个如下所示的组件树：
 
 ```json
-App // primary application component
-└── MyComponent // child component
+App // 主程序组件
+└── MyComponent // 子组件
 ```
 
-When an application grows, the component tree can become more complex.
-For example, a more complex application may have a component tree that looks like this:
+当应用程序增长时，组件树可能会变得更加复杂，例如一个复杂的应用程序可能有一个如下的组件树：
 
 ```json
 App
@@ -62,34 +56,23 @@ App
 └── Footer
 ```
 
-In nesting components, you can create a hierarchy of components that can be reused throughout the application.
-This allows for a more modular approach to building applications, as components can be reused in different contexts.
+在嵌套组件中，您可以创建可在整个应用程序中复用的组件，这允许采用更加模块化的方式构建应用程序，因为组件可以在不同的上下文中复用。
 
-## Component lifecycles
+## 组件生命周期
 
-Components have a lifecycle that defines how they are created, updated, and destroyed.
-A Solid component's lifecycle is different from other frameworks, as it is tied to the [concept of reactivity](/concepts/intro-to-reactivity).
+组件有一个生命周期，定义了组件如何创建、更新和销毁。Solid 组件的生命周期与其他框架不同，因为背后涉及到[响应式](/concepts/intro-to-reactivity)。
 
-Where frameworks may re-run components on every state change, a Solid component's lifecycle is tied to its initial run.
-What this means is that a Solid component is only run once, when it is first rendered into the DOM.
-After that, the component is not re-run, even if the application's state changes.
+框架可能在每次状态更改时重新运行组件，但 Solid 组件的生命周期与其初始化状态相关，也就是说 Solid 组件仅在首次渲染 DOM 中时运行一次，此后，即使应用程序发生变化，该组件也不会重新运行。
 
-When the Solid component renders, it sets up a reactive system that monitors for state changes.
-When a state change occurs, the component will update the relevant areas without re-running the entire component.
-By bypassing the full component lifecycle on every state change, Solid has a more predictable behavior compared to frameworks that re-run functions on every update.
+当 Solid 组件渲染时，它会设置一个响应式系统监控状态的变化。当状态发生变化，组件将更新相关的区域，而不会重新运行整个组件。与每次状态更改都重新 运行函数的框架相比，Solid 的行为更加可预测。
 
-Since the component's logic is not continuously visited, getting this setup right is important when working with Solid.
+由于不会连续访问组件的逻辑，因为使用 Solid 时正确设置启动非常重要。
 
-### Initialization & configuration
+### 初始化 & 配置
 
-When a component is first rendered into the DOM, the component function is executed.
-This is where you will set up the component's state and side-effects.
-This includes setting up [signals](/concepts/signals), [stores](/concepts/stores), [effects](/concepts/effects), and other reactive elements.
-Since the logic in the component function is not continuously visited, it is important to set up the component correctly from the outset.
+当组件第一次渲染到 DOM 中时，组件函数将会被执行。您可以在此处设置组件的状态和副作用。包括设置 [signals](/concepts/signals)、[stores](/concepts/stores)、[effect](/concepts/effects) 和其他响应式元素。由于组件函数的逻辑不是连续访问，因为从一开始就正确设置组件非常重要。
 
-Each component instance is independent of other instances, meaning that each component has its own state and side-effects.
-Through establishing proper dependencies, you can ensure that the component is set up correctly.
-This allows for components to be reused in different contexts without affecting each other.
+每个组件实例都独立于其他实例，这意味着每个组件都有自己的状态和副作用。通过建立适当的依赖关系，您可以确保组件正确设置，这允许组件在不同的上下文中重用，而不会相互影响。
 
 ```tsx
 function MyComponent() {
@@ -106,23 +89,18 @@ function MyComponent() {
 }
 ```
 
-When this component is rendered into the DOM, the function body is executed.
-This includes creating the `count` signal and executing the `console.log(count())` statement, which will log the current value of `count` to the console.
-In addition, the component's JSX is returned, which will be rendered into the DOM.
+当组件被渲染到 DOM 中时，函数体就会执行。这包括创建 `count`信号并执行 `console.log(count())` 语句，该语句会将 `count` 的当前值打印到控制台。此外，还会返回组件的 JSX，该 JSX 将被渲染到 DOM 中。
 
-After the component is rendered, the `console.log` statement will not be executed again, even if the component's state changes.
-However, because the component's JSX is reactive, each press of the button will update the DOM with the new value of `count`.
+组件渲染后，即使组件的状态发生变化，`console.log`语句也不会再次执行。但是由于组件的 JSX 是响应式的，因此每次按下按钮都会使用 count 的新值更新 DOM。
 
-In essence, Solid splits the concerns:
+从本质上说，Solid 解决了这些问题：
 
-1. The initial setup logic, which is executed once when the component is rendered.
-2. The reactive logic, which is executed when the component's state changes.
+1. 初始设置逻辑，在组件渲染时执行一次
+2. 响应式逻辑，当组件的状态发生变化时执行。
 
-### Conditional rendering
+### 条件渲染
 
-To display different content based on state or other criteria, you can use conditional rendering.
-Given that the component function is only executed once, conditional statements must be placed within the return statement.
-This design ensures that conditional paths are clear and immediately understood.
+如果要根据状态或者其他条件显示不同的内容，您可以使用条件渲染。由于组件函数只执行一次，因为必须将条件语句放到 return 语句中。这种设计确保条件路径清晰并能被立刻理解。
 
 ```tsx
 function MyComponent() {
@@ -144,12 +122,10 @@ function MyComponent() {
 }
 ```
 
-This example uses a [ternary operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_operator) to conditionally render different content based on the value of `count`.
-When `count` is greater than 5, the component will display `"Count limit reached"`.
-Otherwise, it will display the current count with an increment button.
+这个例子使用了三元运算符，根据 count 的值渲染不同的内容。当 count 大于 5 时，组件将显示 `"Count limit reached"`，否则，它的计数会继续增加。
 
 <Callout>
-To simplify conditional rendering, Solid provides built-in [control-flow](/concepts/control-flow/conditional-rendering) components like [`Show`](/concepts/control-flow/conditional-rendering#show), which create a more readable conditional rendering experience.
+为了简化条件渲染，Solid 内置了控制流组件比如 [Show](https://docs.solidjs.com/concepts/control-flow/conditional-rendering#show)，代码更具可读性。
 
     ```tsx
     function MyComponent() {
@@ -175,20 +151,17 @@ To simplify conditional rendering, Solid provides built-in [control-flow](/conce
 
 </Callout>
 
-## Importing and exporting
+## 导入和导出
 
-For components to be reusable, they need to be exported from one module and imported into another.
-This allows for components to be shared and used where needed.
+为了使组件可复用，需要将它们从一个模块[导出](https://developer.mozilla.org/en-US/docs/web/javascript/reference/statements/export)到另一个模块中，这使得可以在需要时共享和使用组件。
 
-### Exporting components
+### 导出组件
 
-Once defined, a component can be [exported](https://developer.mozilla.org/en-US/docs/web/javascript/reference/statements/export) to make it available for use in other parts of your application.
-There are two ways to export a component: [named exports](https://developer.mozilla.org/en-US/docs/web/javascript/reference/statements/export#named_exports) and [default exports](https://developer.mozilla.org/en-US/docs/web/javascript/reference/statements/export#default_exports).
+定义后，可以导出组件以使其可在应用程序的其他部分中使用。导出组件有两种方法：[命名导出](https://developer.mozilla.org/en-US/docs/web/javascript/reference/statements/export#named_exports)和[默认导出](https://developer.mozilla.org/en-US/docs/web/javascript/reference/statements/export#default_exports)。
 
-**Named export:**
+**命名导出:**
 
-Named exports allow for multiple components to be exported from a single file.
-To export a component, you must use the `export` keyword before the function definition or specify the name of the component to export in curly braces (`{}`).
+命名导出允许从单个文件导出多个组件，要导出组件，必须在函数定义之前使用 export 关键字或在大括号（`{}`)中指定要导出的组件名称。
 
 ```typescript
 export function MyComponent() {
@@ -204,10 +177,9 @@ function MyComponent() {
 export { MyComponent }
 ```
 
-**Default export:**
+**默认导出:**
 
-Default exports specify a single component to export from a file.
-This is done by using the `default` keyword.
+默认导出指定要从文件导出的单个组件。这是通过使用 default 关键字来完成的。
 
 ```typescript
 // MyComponent.ts
@@ -216,14 +188,13 @@ export default function MyComponent() {
 }
 ```
 
-### Importing components
+### 导入组件
 
-To use a component in another file or component, it must be [imported](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import).
-To import a component, you must specify the path to the file containing the component and the name of the component to import.
+要在另一个文件或组件中使用某个组件，必须将其[导入](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import)。要导入组件，您必须指定包含该组件的文件的路径以及要导入的组件的名称。
 
-**Named import:**
+**命名导入**
 
-When importing a named export, you must specify the name of the component to import in curly braces (`{}`).
+导入命名导出时，必须在大括号 (`{}`) 中指定要导入的组件的名称。
 
 ```tsx
 // App.ts
@@ -238,8 +209,7 @@ function App() {
 }
 ```
 
-This is the preferred way to import components, as it allows for better code readability and maintainability.
-Additionally, it allows for multiple components to be imported from the same file.
+这是导入组件的首选方式，因为它可以提高代码的可读性和可维护性。此外，它还允许从同一文件导入多个组件。
 
 ```tsx
 // App.ts
@@ -255,9 +225,9 @@ function App() {
 }
 ```
 
-**Default import:**
+**默认导入：**
 
-To import a default export, you must specify the name of the component to import.
+要导入默认导出，您必须指定要导入的组件的名称。
 
 ```tsx
 // App.ts
@@ -272,19 +242,18 @@ function App() {
 }
 ```
 
-### Importing Solid and its utilities
+### 导入 Solid 和其工具库
 
-To use Solid, you must import the Solid library.
-The reactive primitives and utilities are exported from Solid's main module.
+要使用 Solid，您必须导入 Solid 库。比如响应式相关的工具函数都需要从 Solid 主模块中导出：
 
 ```tsx
 import { createSignal } from "solid-js";
 ```
 
-However, some of Solid's utilities are exported from their own modules.
+有些则是从内部模块中导出：
 
 ```tsx
 import { createStore } from "solid-js/store";
 ```
 
-To see a full list of Solid's utilities, the Reference Tab in the sidebar provides the API Documentation.
+查看 Solid 实用程序的完整列表，侧边栏中的“参考”选项卡提供了 API 文档。

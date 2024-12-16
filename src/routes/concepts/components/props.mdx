@@ -2,12 +2,11 @@
 title: Props
 ---
 
-Props are a way to pass state from a parent component to a child component.
-These read-only properties are passed to components as attributes within JSX and are accessible within the component via the `props` object:
+Props 是一种将状态从父组件传递到子组件的方法。这些只读属性会作为 JSX 中的属性传递给组件，并且可以通过 `props` 对象在组件中访问：
 
 ```tsx
 function App() {
-	// Passing a prop named "name" to the MyComponent component
+	// 传递一个名为 "name" 的 prop 给 MyComponent 组件
 	return (
 		<div>
 			<MyComponent name="Ryan Carniato" />
@@ -16,7 +15,7 @@ function App() {
 }
 ```
 
-To access the props in the child component, you use the `props` object:
+要在子组件中访问 props，可以使用 `props` 对象：
 
 ```tsx
 function MyComponent(props) {
@@ -26,78 +25,69 @@ function MyComponent(props) {
 
 ## `mergeProps`
 
-[`mergeProps`](/reference/reactive-utilities/merge-props) is a Solid utility function designed to merge multiple potentially reactive objects together.
-It behaves similar to [`Object.assign`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign) but will retain the reactivity of the properties being merged.
-This helps ensure that when individual properties within the merged object change, their reactivity is not lost.
+[mergeProps](https://docs.solidjs.com/reference/reactive-utilities/merge-props) 是一个 Solid 工具函数，旨在将多个可能的响应式对象合并在一起。它的行为类似于 [Object.assign](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign)，但会保留属性的响应式。这有助于确保当合并对象中的属性发生更改时，它们的响应式不会丢失。
 
 ```typescript
 import { mergeProps } from "solid-js";
 
 function MyComponent(props) {
-	// Using mergeProps to set default values for props
+	// 使用 mergeProps 设置 props 的默认值
 	const finalProps = mergeProps({ defaultName: "Ryan Carniato" }, props);
 
 	return <div>Hello {finalProps.defaultName}</div>;
 }
 
-// Usage: <MyComponent defaultName="Ryan Carniato" />
+// 用法: <MyComponent defaultName="Ryan Carniato" />
 ```
 
-When merging props, if there is no existing value for a property, the value from the first object will be used.
-However, if a value already exists, it will be used instead, all while retaining the reactivity of the property.
+合并 props 时，如果属性没有值，将使用第一个对象中的值。如果有，则会使用该值，并同时保留属性的响应式。所以我们可以使用 mergeProps 设置 props 的默认值。
 
-## Destructuring props
+## 解构 props
 
-Props are read-only so that child components do not directly modify the data passed by the parent.
-This also encourages one-way data flow, a pattern often seen to promote more predictable data management.
+Props 是只读的，因此子组件不会直接修改父组件传递的数据，这也鼓励了单向数据流的使用，这种模式通常可以促进更具可预测性的数据管理。
 
-With Solid, destructuring props is not recommended as it can break reactivity.
-Instead, you should access props directly from the `props` object, or wrap them in a function to ensure they are always up-to-date:
+对于 Solid，不建议解构 props，因为它会破坏响应式。相反，您应该直接从 props 对象访问 props，或者将它们包装在函数中以确保它们始终是最新的：
 
 ```typescript
 function MyComponent(props) {
-	const name = props.name; // ❌: breaks reactivity and will not update when the prop value changes
-	const name = () => props.name; // ✓: by wrapping `props.name` into a function, `name()` always retrieves its current value
+	const name = props.name; // ❌: 破坏响应式并且当 prop 值更改的时候不会更新
+	const name = () => props.name; // ✓: 通过将 `props.name` 用函数包装, `name()` 会始终获取它的当前值
 }
 ```
 
 ### `splitProps`
 
-[`splitProps`](/reference/reactive-utilities/split-props) is a utility function designed to help split a single props object into multiple sets of props, retaining the reactivity of the individual properties.
-It provides a way to destructure props without breaking reactivity.
+[splitProps](https://docs.solidjs.com/reference/reactive-utilities/split-props) 是一个工具函数，旨在帮助将单个 props 对象拆分为多组 props，同时保留属性的响应式。它提供了一种在不破坏响应式的情况下解构 props 的方法。
 
-`splitProps` gives you the ability to define one or more arrays of keys that you wish to extract into separate props objects, all while retaining the reactivity of the individual properties.
-It will return an array of props objects related to each set of keys, plus an additional props object containing any remaining keys.
+`splitProps`使您能够定义一个或多个您希望提取到单独的 props 对象中的键值数组，同时保留各个属性的响应式。它将返回与每组键名相关的 props 对象数组，以及包含剩余键名的 props 对象。
 
-When passing props to child components, you can use `splitProps` to split the props into multiple groups, and then pass each group to the appropriate child component:
+将 props 传递给子组件时，可以使用 `splitProps`将 props 拆分成多个组，然后将每个组传递给相应的子组件：
 
 ```typescript
 import { splitProps } from "solid-js";
 
 function ParentComponent(props) {
-	// Splitting props into two groups: 'name' and 'age'
+	// 将 props 拆成两个组: 'name' and 'age'
 	const [greetingProps, personalInfoProps, restProps] = splitProps(
 		props,
 		["name"],
 		["age"]
 	);
 
-	// Using greetingProps and personalInfoProps in the current component
+	// 在当前组件中使用 greetingProps 和 personalInfoProps
 	return (
 		<div>
 			<Greeting {...greetingProps} />
 			<PersonalInfo {...personalInfoProps} />
-			{/* restProps can be passed down or used as needed */}
+			{/* restProps 可以被传递或者按需使用 */}
 		</div>
 	);
 }
 ```
 
-## Passing props to children
+## 传递 props 给 children
 
-In most instances, simply using `props` within JSX will work without any issues.
-However, there are some cases where accessing `props.children` multiple times can introduce problems and unexpected behaviours, such as repeated creation of child components or elements.
-For instances like these, Solid provides a [`children`](/reference/component-apis/children) helper that ensures you always get the right child components without anything unwanted happening.
+在大多数情况下，只需在 JSX 中使用 `props` 就可以正常工作，不会出现任何问题。但是，在某些情况下，多次访问 `props.children` 可能会导致问题和意外行为，例如重复创建子组件或元素。对于这类情况，Solid 提供了一个 [children](https://docs.solidjs.com/reference/component-apis/children) 函数，可确保您始终获得正确的子组件，而不会发生任何意外情况。
 
 ```typescript
 import { children } from "solid-js";
@@ -111,11 +101,10 @@ function ColoredList(props) {
 
 ## Prop drilling
 
-Prop drilling is a term used to describe the process of passing props through multiple layers of components.
-While it can be a useful pattern, it can also lead to problems.
-When components are nested deeply, passing props through each component can become difficult to manage.
-Additionally, this can lead to components receiving props that they do not need, unnecessary re-renders, and trouble refactoring.
+Prop drilling 是一个术语，用于描述将 props 传递多层组件的过程。
 
-Since components in Solid do not own state, props are not needed to pass state between components, but may be used.
-Because of this, there may be times when you need to pass props through multiple layers of components.
-A common solution to this problem is to use [Context](/concepts/context) to pass state to deeply nested components without having to pass props through each component in between.
+> 译者注：想想我们使用 React 的时候，有的时候需要将 props 传递到层级很深的组件，但中间的这些组件其实并不需要这些 props
+
+虽然它可能是一种有用的模式，但也可能导致问题。当组件嵌套很深时，组件传递 props 可能会变得难以管理。此外，这可能会导致组件接收它们不需要的 props、不必要的重新渲染以及重构麻烦。
+
+由于 Solid 组件不拥有状态，因此不需要在组件之间传递状态，但依然可能会被用到。因此，有时您可能需要通过多层组件传递 props。此问题的常见解决方案是使用 [Context](/concepts/context) 将状态传递给深度嵌套的组件，而不必通过中间的每个组件传递 props。

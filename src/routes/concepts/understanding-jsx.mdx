@@ -1,85 +1,73 @@
 ---
-title: Understanding JSX
+title: 理解 JSX
 order: 2
 ---
 
-JSX is an extension for JavaScript.
-It allows you to write HTML-like code inside your JavaScript file which keeps your rendering logic and content in the same place.
-This provides a concise and readable way to create and represent components.
+JSX 是 JavaScript 的扩展语法。它允许您在 JavaScript 文件中编写类似 HTML 的代码，从而将渲染逻辑和内容保持在同一位置。这提供了一种简洁可读的方式来创建和表示组件。
 
-## How Solid uses JSX
+## Solid 如何使用 JSX
 
-Solid was designed to align closely with HTML standards.
+Solid 被设计成对齐 HTML 标准：
 
 ```jsx
-const element = <h1>I'm JSX!!</h1>
+const element = <h1>I'm JSX!!</h1>;
 ```
 
-It offers a distinct advantage, however: to copy/paste solutions from resources like Stack Overflow; and to allow direct usage of templates from design tools.
-Solid sets itself apart by using JSX immediately as it returns [DOM](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Introduction) elements.
-This lets you use dynamic expressions within your HTML by allowing variables and functions to be references with the use of curly braces (`{ }`):
+它提供了一个明显的优势比如从 Stack Overflow 等网站直接复制粘贴解决方案，以及直接使用设计工具中的模板。您可以在返回的 DOM 元素中使用大括号 (`{ }`) 来引用变量和函数从而在 HTML 中使用动态表达式：
 
 ```jsx
 const Component = () => {
-	const animal = { breed: "cat", name: "Midnight" }
+	const animal = { breed: "cat", name: "Midnight" };
 
 	return (
 		<p>
 			I have a {animal.breed} named {animal.name}!
 		</p>
-	)
-}
+	);
+};
 ```
 
-This means JavaScript content can be rendered on web pages based on an application's state or logic.
+这意味着 JavaScript 内容可以根据应用程序的状态或逻辑在网页上渲染。
 
-Additionally, Solid's [reactive](/concepts/intro-to-reactivity) system introduces [fine-grained reactivity](/advanced-concepts/fine-grained-reactivity) with JSX.
-This updates only the necessary parts of the DOM when changes occur in the underlying state.
+此外，Solid 的[响应式](/concepts/intro-to-reactivity)系统引入了 JSX 的[细粒度响应式](/advanced-concepts/fine-grained-reactivity)。当底层状态发生改变时，只会更新 DOM 中的必要部分。
 
-## Using JSX in Solid
+## 在 Solid 中使用 JSX
 
-### Return a single root element
+### 返回单个根元素
 
-Where HTML lets you have disconnected tags at the top level, JSX requires that a component to return a single root element.
+JSX 要求组件返回单个根元素。
 
-<Callout type="advanced">
-When working with JSX, parts of your code are translated into structured HTML that is placed at the start of the file.
-Static elements are processed differently from dynamic ones, which might change based on data or user actions.
-For dynamic elements, special markers are added for better handling during rendering.
+<Callout type="进阶知识">
+使用 JSX 时，部分代码会转换为结构化 HTML，并放置在文件开头。静态元素的处理方式与动态元素不同，动态元素可能会根据数据或用户操作而发生变化。对于动态元素，会添加特殊标记以便在渲染期间更好地处理。
 
-Having a single root creates a consistent and manageable hierarchy to optimize rendering and updates.
+拥有单个根元素可创建一致且可管理的层次结构，以优化渲染和更新。
+
 </Callout>
 
-JSX maintains the familiar nested, tree-like structure found in HTML.
-As a result, parent-child relationships between elements become easier to follow.
+JSX 保持了 HTML 的嵌套树状结构。因此，元素之间的父子关系变得更容易理解。
 
-### Close all tags
+### 闭合所有标签
 
-Self-closing tags are a must in JSX.
-Unlike in HTML, where elements like `<input>`, `<img>`, or `<br>` don't require explicit closure, JSX requires consistent self-closing tags.
-This helps to avoid potential rendering issues.
+自闭合标签在 JSX 中是必须的。不同于 HTML 中的 `<input>`, `<img>`, 或 `<br>`等元素不需要显式闭合，JSX 需要一致的自闭合标签。这将有助于避免潜在的渲染问题。
 
 ```jsx
 <img src="./image-here.png" />
 ```
 
-### Properties vs. attributes
+### Properties（属性） vs. attributes（特性）
 
-HTML attributes and JSX properties may seem similar, but they serve different purposes and behave differently.
-Both offer ways to specify configurations or pass information.
-However, HTML is used for standard web content and JSX creates Solid's component logic.
+注：Property 和 Attributes 通常都翻译为“属性”，这里因为涉及到比较，所以作了区分。
+
+HTML 特性和 JSX 属性可能看起来很相似，但它们的用途不同，行为也不同。两者都提供了指定配置或传递信息的方法。然而，HTML 用于标准 Web 内容，JSX 用于创建 Solid 组件逻辑。
 
 #### HTML attributes
 
-[HTML attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes) are values set directly on HTML elements.
-They provide additional information about an element to guide its initial behavior and state.
-These attributes are often translated into properties on DOM objects once the browser parses the HTML.
+[HTML 特性](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes)是直接在 HTML 元素上设置的值。它们提供有关元素的附加信息来指导其初始行为和状态。一旦浏览器解析 HTML，这些特性通常会被转换为 DOM 对象的属性。
 
-In JSX files, HTML attributes are used much like regular HTML, with a few key differences due to the blend of HTML and JavaScript:
+在 JSX 文件中，HTML 特性的使用方式与常规 HTML 非常相似，但由于是 HTML 和 JavaScript 的混合，存在一些关键差异：
 
-- Event listeners such as `onClick` can be in camelCase or lowercase.
-  (**Note:** When using ESLint, you will get a warning if you use lowercase.)
-- In cases where you can dynamically specify a value, you can replace the `"` and `"` with curly braces (`{ }`):
+- 诸如 onClick 之类的事件监听器可以采用驼峰式或小写形式。 （注意：使用 ESLint 时，如果使用小写，将会收到警告。）
+- 如果您需要动态指定值，可以将 `"` 和 `"` 替换为大括号 (`{}`)：
 
 ```jsx
 <button class="myClass" onClick={handleClick}>
@@ -88,7 +76,7 @@ In JSX files, HTML attributes are used much like regular HTML, with a few key di
 ```
 
     	<Callout>
-    	  If you wish to pass objects in JSX, such as with inline styling, you will have to use double curly braces (`{{ }}`).
+    	  如果您希望在 JSX 中传递对象（比如使用内联样式），则必须使用双花括号（`{{}}`）
 
 ```jsx
 <button style={{
@@ -98,32 +86,29 @@ In JSX files, HTML attributes are used much like regular HTML, with a few key di
   Click me!
 </button>
 ```
+
 </Callout>
 
 ### JSX properties (props)
 
-JSX properties, commonly known as "props," help with the passing of data and configurations to components within an application.
-They connect the component with the data it requires, for seamless data flows and dynamic interactions.
+JSX 属性（通常称为“props”）有助于将数据和配置传递给应用程序的组件。它们将组件与其所需的数据连接起来，以实现无缝数据流和动态交互。
 
-#### Core concepts
+#### 核心理念
 
-- **Static props**:
-  In Solid's JSX, static props are integrated directly into the HTML by cloning the template and using them as attributes.
+- **静态 props**:
+  在 Solid 的 JSX 中，静态 props 会通过克隆模板并将其用作属性的方式直接集成到 HTML
 
- - **Dynamic props**:
- Dynamic props rely on state, allowing the content or properties to be dynamic.
- An example is changing the style of an element in response to interactions within an application. 
- This can be expressed in the form of signals (`value={value()}`).
+- **动态 props**:
+  动态 props 依赖于状态，允许内容或属性是动态的。举个例子，当交互的时候更改元素的样式，就可以用信号的形式表示（`value={value()}`）
 
-- **Data transfer**:
-  Props are also used to fill components with data that comes from resources, like [`createResource`](/reference/basic-reactivity/create-resource) calls.
-  This results in components that react in real-time to data changes.
+- **数据传输**:
+  Props 还可以用于将资源中的数据填充组件，例如 [createResource](https://docs.solidjs.com/reference/basic-reactivity/create-resource) 调用，这导致组件能够对数据变化实时做出反应。
 
 <Callout>
-Expressions, whether fixed or dynamic, get applied *in the order defined within the JSX*.
-This works for a wide range of DOM elements, but will not work with elements that require attributes to be defined in a special order, such as input types with `type='range'`.
+表达式，无论是固定的还是动态的，**都按照 JSX 中定义的顺序应用**。这适用于多种 DOM 元素，但不适用于需要以特殊顺序定义属性的元素，例如带有 `type='range'` 的 input 类型。
 
-When order influences an element's behavior, users must define the expressions in the order that the element is expected.
+当顺序影响元素的行为时，用户必须按照元素预期的顺序定义表达式。
+
 </Callout>
 
-For how to use props effectively in Solid, explore the [props page](/concepts/components/props).
+关于如何在 Solid 中有效使用 props，请浏览 [props 页面](https://docs.solidjs.com/concepts/components/props)。

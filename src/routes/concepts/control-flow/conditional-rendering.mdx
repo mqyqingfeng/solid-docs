@@ -1,81 +1,72 @@
 ---
-title: "Conditional rendering"
+title: "条件渲染"
 order: 1
 ---
 
-Conditional rendering is the process of displaying different UI elements based on certain conditions.
-This is a common pattern in UI development, and is often used to show or hide elements based on user input, data, or other conditions.
+条件渲染是指根据条件显示不同 UI 元素的过程。这是 UI 开发中的常见模式，通常用于根据用户输入、数据或其他条件显示或隐藏元素。
 
-Solid offers dedicated components to handle conditional rendering in a more straightforward and readable way.
+Solid 提供了专用的组件以更直接和可读的方式处理条件渲染。
 
 ## Show
 
-`<Show>` renders its children when a condition is evaluated to be true.
-Similar to the [ternary operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator) in JavaScript, it uses control logic flow within JSX to determine what to render.
+当条件评估为真时，`<Show>` 渲染其子级。与 JavaScript 中的[三元运算符](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator)类似，它使用 JSX 中的控制逻辑流来确定要渲染的内容。
 
-`<Show>` has a `when` property that is used to determine whether or not to render its children.
-When there is a change in the state or props it depends on, this property is re-evaluated.
-This property can be a boolean value, or a function that returns a boolean value.
+`<Show>` 有一个 `when` 属性，用于确定是否渲染其子级。当它所依赖的状态或属性发生变化时，该属性将被重新评估。该属性可以是布尔值，也可以是返回布尔值的函数。
 
 ```jsx
-import { Show } from "solid-js"
+import { Show } from "solid-js";
 
 <Show when={data.loading}>
-  <div>Loading...</div>
-</Show>
+	<div>Loading...</div>
+</Show>;
 ```
 
-`<Show>` has the `fallback` property that can be used to specify the content to be rendered when the condition evaluates to false.
-This property can return a JSX element.
+`<Show> `有一个 `fallback` 属性，用于指定条件评估为 `false` 时要渲染的内容。该属性可以返回一个 JSX 元素。
 
 ```jsx
-import { Show } from "solid-js"
+import { Show } from "solid-js";
 
 <Show when={!data.loading} fallback={<div>Loading...</div>}>
 	<h1>Hi, I am {data().name}.</h1>
-</Show>
+</Show>;
 ```
 
-If there are multiple conditions that need to be handled, `<Show>` can be nested to handle each condition.
+如果需要处理多个条件，可以嵌套 `<Show>` 来处理每个条件。
 
 ```jsx
-import { Show } from "solid-js"
+import { Show } from "solid-js";
 
 <Show when={data.loading}>
-  <div>Loading...</div>
-  <Show when={data.error}>
-    <div>Error: {data.error}</div>
-  </Show>
-</Show>
+	<div>Loading...</div>
+	<Show when={data.error}>
+		<div>Error: {data.error}</div>
+	</Show>
+</Show>;
 ```
-
 
 ## Switch and Match
 
-When there are multiple conditions that need to be handled, it can be difficult to manage the logic flow with nested `<Show>` components.
-Solid has the `<Switch>` and `<Match>` components for this purpose.
+当需要处理多个条件时，使用嵌套的 `<Show>` 组件来管理逻辑流可能会很困难。为此，Solid 提供了 `<Switch>` 和 `<Match>` 组件。
 
-Similar to JavaScript's [switch/case](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/switch) structure, `<Switch>` wraps multiple `<Match>` components so that each condition is evaluated _in sequence_.
-The first `<Match>` component that evaluates to true will have its children rendered, and the rest will be ignored.
+与 JavaScript 的 [switch/case](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/switch) 结构类似，`<Switch>` 包装了多个 `<Match>` 组件，以便按顺序评估每个条件。第一个值为 true 的 `<Match>` 组件将渲染其子组件，其余组件将被忽略。
 
 ```jsx
-import { Switch, Match } from "solid-js"
+import { Switch, Match } from "solid-js";
 
 <Switch>
-  <Match when={condition1}>
-    <p>Outcome 1</p>
-  </Match>
-  <Match when={condition2}>
-    <p>Outcome 2</p>
-  </Match>
-</Switch>
+	<Match when={condition1}>
+		<p>Outcome 1</p>
+	</Match>
+	<Match when={condition2}>
+		<p>Outcome 2</p>
+	</Match>
+</Switch>;
 ```
 
-Similar to `<Show>`, each `<Match>` component has a `when` property that is used to determine whether or not to render its children.
-An optional `fallback` property can also be passed to `<Switch>` to specify the content be rendered when none of the `<Match>` components evaluate to true.
+与 `<Show>` 类似，每个` <Match>` 组件都有一个 `when` 属性，用于确定是否渲染其子组件。还可以将可选的 `fallback` 属性传递给 `<Switch>`，以指定当没有 `<Match>` 组件的计算结果为 `true` 时渲染的内容。
 
 ```jsx
-import { Switch, Match } from "solid-js"
+import { Switch, Match } from "solid-js";
 
 <Switch fallback={<p>Fallback content</p>}>
 	<Match when={condition1}>
@@ -84,5 +75,5 @@ import { Switch, Match } from "solid-js"
 	<Match when={condition2}>
 		<p>Outcome 2</p>
 	</Match>
-</Switch>
+</Switch>;
 ```

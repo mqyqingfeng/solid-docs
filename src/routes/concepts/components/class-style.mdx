@@ -1,17 +1,16 @@
 ---
-title: Class and style
+title: Class 与 style
 order: 2
 ---
 
-Similar to HTML, Solid uses `class` and `style` attributes to style elements via [CSS (Cascading Style Sheets)](https://developer.mozilla.org/en-US/docs/Glossary/CSS).
+与 HTML 类似，Solid 使用 `class` 和 `style` 属性通过 CSS（[层叠样式表](https://developer.mozilla.org/en-US/docs/Glossary/CSS)）设置元素的样式。
 
-- **Class attribute**: Enables styling one or more elements through CSS rules.
-- **Style attribute**: Inline styles that style single elements.
+- **Class 属性**：通过 CSS 规则设置一个或多个元素的样式。
+- **Style 属性**：为单个元素设置内联样式。
 
-## Inline styling
+## 内联样式
 
-The `style` attribute allows you to style a single element and define CSS variables dynamically during runtime.
-To use it, you can pass either a string or an object.
+`style` 属性允许您设置单个元素的样式并在运行时动态定义 CSS 变量。要使用它，您可以传递字符串或对象。
 
 ```tsx
 // String
@@ -21,25 +20,20 @@ To use it, you can pass either a string or an object.
 <div style={{ color: "red" }}>This is a red div</div>
 ```
 
-When using an object, the keys represent the CSS property names, and the values represent the CSS property values.
-The keys must be in dash-case, and the values must be strings.
+使用对象时，键代表 CSS 属性名称，值代表 CSS 属性值。键必须是连接号格式，值必须是字符串。
 
 <EraserLink
 	href="https://app.eraser.io/workspace/maDvFw5OryuPJOwSLyK9?elements=PgkKTGxuuOtDiQ_1KDA5dw"
 	preview="https://app.eraser.io/workspace/maDvFw5OryuPJOwSLyK9/preview?elements=PgkKTGxuuOtDiQ_1KDA5dw&type=embed"
 />
 
-While inline styles are useful for rapid prototyping, they are not recommended for production use.
-This is because they are not reusable, and they can be difficult to maintain over time.
+虽然内联样式对于快速原型设计很有用，但不建议用于生产用途。这是因为它们不可复用，并且随着时间推移可能变得难以维护。
 
 ## Classes
 
-The `class` attribute allows you to style one or more elements through CSS rules.
-This provides a more structured approach to styling, as it allows you to reuse styles across multiple elements.
+`class` 属性允许您通过 CSS 规则设置一个或多个元素的样式。它提供了一种更加结构化的添加样式的方法，因为它允许您在多个元素间复用样式。
 
-Classes are defined in CSS files, which are then imported into the component files that use them.
-You can import these files using the `import` statement at the top of your component file.
-Once imported into a component, the classes are scoped to that component and any of its children.
+Class 在 CSS 文件中定义，然后将其导入到需要使用的组件文件中。您可以使用组件文件顶部的 `import` 语句导入这些文件。一旦导入到组件中，Class 的范围就限于该组件及其任何子组件。
 
 ```jsx
 import "./Card.css";
@@ -49,10 +43,9 @@ function Card() {
 }
 ```
 
-### Dynamic styling
+### 动态样式
 
-Dynamic styling provides a way to change the appearance of a component based on state or other factors like user inputs.
-This is useful for creating components that can adapt to different scenarios without having to create multiple versions of the same component:
+动态样式提供了一种根据状态或其他因素（例如用户输入）更改组件样式的方法。这对于创建可以适应不同场景的组件非常有用，而无需创建同一组件的多个版本：
 
 ```tsx
 const [theme, setTheme] = createSignal("light");
@@ -62,8 +55,7 @@ const [theme, setTheme] = createSignal("light");
 </div>;
 ```
 
-[Props](/concepts/components/props) are another way to change styles.
-By passing props to components, you can adapt styles based on the component's usage or the data it receives:
+[Props](/concepts/components/props) 是改变样式的另一种方式。通过将 props 传递给组件，您可以根据组件的使用情况或其接收的数据调整样式：
 
 ```tsx
 function ThemedButton(props) {
@@ -77,34 +69,27 @@ function ThemedButton(props) {
 
 ### `classList`
 
-When you want to apply multiple classes to an element, you can use the [`classList` attribute](https://developer.mozilla.org/en-US/docs/Web/API/Element/classList).
-To use it, you can pass either a string or an object where the keys represent the class names and the values represent a boolean expression.
-When the value is `true`, the class is applied; when `false`, it is removed.
+当您想将多个类名应用于一个元素时，可以使用 `classList` [属性](https://developer.mozilla.org/en-US/docs/Web/API/Element/classList)。要使用它，您可以传递一个字符串或一个对象，其中键代表类名，值代表布尔表达式。当值为 `true` 时，应用该类名；当 `false` 时，删除该类名。
 
 ```tsx
 const [current, setCurrent] = createSignal("foo");
 
 <button
-	classList={{ "selected" : current() === "foo" }}
+	classList={{ selected: current() === "foo" }}
 	onClick={() => setCurrent("foo")}
 >
 	foo
 </button>;
 ```
 
-`classList` is often more efficient than `class` when handling multiple conditional classes.
-This is because `classList` selectively toggles only the classes that require alteration, while `class` will be re-evaluated each time.
-For a single conditional class, using `class` might be simpler but as the number of conditional classes increases, `classList` offers a more readable and declarative approach.
+在处理多个条件类时，`classList` 通常比 `class` 更有效。这是因为 `classList` 会有选择地仅切换需要更改的类名，而 `class` 每次都会重新评估。对于单个条件类，使用 `class` 可能更简单，但随着条件类数量的增加，`classList`更具可读性和声明性。
 
 <Callout>
-    While it is possible, mixing `class` and `classList` can introduce unexpected errors.
-    If both are reactive when the `class` value changes, Solid will set the entire `class` attribute.
-    This will remove any classes set by `classList`.
+混合使用 `class`和`classlist`可能会导致意外错误。比如当 class 值更改时如果两者都是响应式的，Solid 将设置整个 class 属性，这将删除 classList 设置的任何类。
 	
-    To avoid this, the `class` attribute should be set to a static string or nothing.
-    Alternatively, `class` can be set to a static computed value (e.g. `class={baseClass()}`), but then it must be put before any `classList` attributes.
-
-    Additionally, since `classList` is a pseudo-attribute, it doesn't work in prop spreads like `<div {...props} />` or in `<Dynamic>`.
+为了避免这种情况，class 属性应设置为静态字符串或者不设置，或者可以将 class 设置为静态计算值（例如 `class={baseClass()}`），但必须将其放到 `classList` 属性之前。  
+  
+此外，由于 classList 是伪属性，因此它不会在 `<div {...props} />` 或在 `<Dynamic>` 中生效。
 </Callout>
 
-For a guide on how to style your components, see [Styling Your Components](/guides/styling-your-components), where we cover the different ways to style your components using libraries such as [TailwindCSS](https://tailwindcss.com/).
+关于如何设置组件样式，请参阅[设置组件样式](/guides/styling-your-components) ，其中我们介绍了设置组件样式的不同方法，比如使用 [TailwindCSS](https://tailwindcss.com/) 等库。

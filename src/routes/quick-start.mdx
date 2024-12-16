@@ -1,28 +1,27 @@
 ---
-title: Quick start
+title: 快速开始
 ---
 
-## Solid playgrounds
+## Solid 演练场
 
-Experience Solid in your browser by visiting our [interactive playground](https://playground.solidjs.com/).
+访问[演练场](https://playground.solidjs.com/)，在浏览器中体验 Solid。
 
-Additionally, we offer a [JavaScript](https://stackblitz.com/github/solidjs/templates/tree/master/js) and [Typescript](https://stackblitz.com/github/solidjs/templates/tree/master/ts) Stackblitz starters, which provide a web-based development environment to get you started.
+此外，我们还提供了 [JavaScript](https://stackblitz.com/github/solidjs/templates/tree/master/js) 和 [Typescript](https://stackblitz.com/github/solidjs/templates/tree/master/ts) Stackblitz 入门程序，它提供了一个基于 Web 的开发环境帮助您入门。
 
-## Creating a Solid application
+## 创建一个 Solid 应用
 
-<Callout title="Prerequisites">
+<Callout title="先决条件">
 
-    - Familiarity with the command line
-    - Install [Node.js](https://nodejs.org/en)
+    - 熟悉命令行
+    - 安装 [Node.js](https://nodejs.org/en)
 
 </Callout>
 
-Solid offers convenient project templates that can help kickstart your development.
-To get an application running, follow the steps below based on the language you prefer to use.
+Solid 提供了快捷的项目模板，帮助你启动。要运行应用程序，请选择您喜欢的语言执行一下步骤：
 
-### For JavaScript projects
+### JavaScript 项目
 
-1. Run the following command in your terminal to get the JavaScript starter template:
+1. 在终端中运行以下命令获取 JavaScript 入门模板：
 
 <TabsCodeBlocks>
 <div id="npm">
@@ -32,15 +31,11 @@ npx degit solidjs/templates/js my-app
 </div>
 
 <div id="yarn">
-```bash frame="none"
-yarn dlx degit solidjs/templates/js my-app
-```
+	```bash frame="none" yarn dlx degit solidjs/templates/js my-app ```
 </div>
 
 <div id="pnpm">
-```bash frame="none"
-pnpm dlx degit solidjs/templates/js my-app
-```
+	```bash frame="none" pnpm dlx degit solidjs/templates/js my-app ```
 </div>
 
 <div id="bun">
@@ -50,14 +45,13 @@ bunx degit solidjs/templates/js my-app
 </div>
 </TabsCodeBlocks>
 
-
-2. Navigate to your application's directory:
+2. 导航至应用程序目录：
 
 ```bash frame="none"
 cd my-app
 ```
 
-3. Install the necessary dependencies:
+3. 安装必要的依赖项：
 
 <TabsCodeBlocks>
 <div id="npm">
@@ -66,17 +60,9 @@ npm install
 ```
 </div>
 
-<div id="yarn">
-```bash frame="none"
-yarn install
-```
-</div>
+<div id="yarn">```bash frame="none" yarn install ```</div>
 
-<div id="pnpm">
-```bash frame="none"
-pnpm install
-```
-</div>
+<div id="pnpm">```bash frame="none" pnpm install ```</div>
 
 <div id="bun">
 ```bash frame="none"
@@ -85,7 +71,7 @@ bun install
 </div>
 </TabsCodeBlocks>
 
-4. Run the application:
+4. 运行应用程序：
 
 <TabsCodeBlocks>
 <div id="npm">
@@ -94,17 +80,9 @@ npm run dev
 ```
 </div>
 
-<div id="yarn">
-```bash frame="none"
-yarn dev
-```
-</div>
+<div id="yarn">```bash frame="none" yarn dev ```</div>
 
-<div id="pnpm">
-```bash frame="none"
-pnpm dev
-```
-</div>
+<div id="pnpm">```bash frame="none" pnpm dev ```</div>
 
 <div id="bun">
 ```bash frame="none"
@@ -113,12 +91,11 @@ bun dev
 </div>
 </TabsCodeBlocks>
 
-This will start the development server.
-Now, you can open your browser and navigate to `localhost:3000` to see your application running.
+这将启动开发服务，现在，打开浏览器并导航至 `localhost:3000` 查看应用程序。
 
-### For TypeScript projects
+### TypeScript 项目
 
-1. To use a TypeScript template, run the following command in your terminal:
+1. 使用 TypeScript 模板，在终端中运行以下命令：
 
 <TabsCodeBlocks>
 <div id="npm">
@@ -128,15 +105,11 @@ npx degit solidjs/templates/ts my-app
 </div>
 
 <div id="yarn">
-```bash frame="none"
-yarn dlx degit solidjs/templates/ts my-app
-```
+	```bash frame="none" yarn dlx degit solidjs/templates/ts my-app ```
 </div>
 
 <div id="pnpm">
-```bash frame="none"
-pnpm dlx degit solidjs/templates/ts my-app
-```
+	```bash frame="none" pnpm dlx degit solidjs/templates/ts my-app ```
 </div>
 
 <div id="bun">
@@ -146,13 +119,13 @@ bunx degit solidjs/templates/ts my-app
 </div>
 </TabsCodeBlocks>
 
-2. Navigate to your application's directory:
+2. 导航至应用程序目录：
 
 ```bash frame="none"
 cd my-app
 ```
 
-3. Install the necessary dependencies:
+3. 安装必要的依赖项：
 
 <TabsCodeBlocks>
 <div id="npm">
@@ -161,17 +134,9 @@ npm install
 ```
 </div>
 
-<div id="yarn">
-```bash frame="none"
-yarn install
-```
-</div>
+<div id="yarn">```bash frame="none" yarn install ```</div>
 
-<div id="pnpm">
-```bash frame="none"
-pnpm install
-```
-</div>
+<div id="pnpm">```bash frame="none" pnpm install ```</div>
 
 <div id="bun">
 ```bash frame="none"
@@ -180,7 +145,7 @@ bun install
 </div>
 </TabsCodeBlocks>
 
-4. Run the application:
+4. 运行应用程序：
 
 <TabsCodeBlocks>
 <div id="npm">
@@ -189,17 +154,9 @@ npm run dev
 ```
 </div>
 
-<div id="yarn">
-```bash frame="none"
-yarn dev
-```
-</div>
+<div id="yarn">```bash frame="none" yarn dev ```</div>
 
-<div id="pnpm">
-```bash frame="none"
-pnpm dev
-```
-</div>
+<div id="pnpm">```bash frame="none" pnpm dev ```</div>
 
 <div id="bun">
 ```bash frame="none"
@@ -208,11 +165,8 @@ bun dev
 </div>
 </TabsCodeBlocks>
 
+这将启动开发服务，现在，打开浏览器并导航至 `localhost:3000` 查看应用程序。
 
-This will start the development server.
-Now, you can open your browser and navigate to `localhost:3000` to see your application running.
+### 探索更多模板
 
-### Explore more templates
-
-Solid offers a variety of Vite templates to streamline your development process.
-These resources are available on [GitHub](https://github.com/solidjs/templates).
+Solid 提供多种 Vite 模板来简化您的开发流程。这些资源可在 [GitHub](https://github.com/solidjs/templates) 上获取。
