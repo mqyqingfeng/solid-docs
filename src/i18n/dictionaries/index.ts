@@ -8,6 +8,6 @@ export const dictionaries = {
 
 export const languages: { [key: string]: string } = {
 	en: "English",
-	zh: "简体中文",
+	// zh: "简体中文",
 	// "pt-br": "Português do Brasil",
 };
