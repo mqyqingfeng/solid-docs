@@ -10,6 +10,7 @@ import { ThemeProvider, useThemeContext } from "./data/theme-provider";
 import { I18nProvider } from "@kobalte/core";
 import { NotFound } from "./ui/not-found";
 import "~/styles.css";
+import { inject } from "@vercel/analytics";
 
 export default function App() {
 	return (
