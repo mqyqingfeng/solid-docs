@@ -12,6 +12,8 @@ import { NotFound } from "./ui/not-found";
 import "~/styles.css";
 import { inject } from "@vercel/analytics";
 
+inject();
+
 export default function App() {
 	return (
 		<ThemeProvider>
