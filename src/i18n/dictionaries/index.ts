@@ -1,8 +1,8 @@
 import english from "./en/ui";
-import chinese from "./zh/ui";
+// import chinese from "./zh/ui";
 
 export const dictionaries = {
-	default: chinese,
+	default: english,
 	// "pt-br": ptbr,
 };
 

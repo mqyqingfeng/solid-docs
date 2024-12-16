@@ -1,17 +1,17 @@
 export default {
 	// hero
-	"hero.title": "Effortless UIs with Reactive Precision.",
-	"hero.subtitle": "Solid is a modern JavaScript framework for today's web.",
-	"hero.subtitle.start": "Fine-grained reactivity goes fullstack.",
-	"hero.button.primary": "Get started",
-	"hero.button.secondary": "Join the community",
+	"hero.title": "使用响应式精度轻松创建 UI",
+	"hero.subtitle": "Solid 是当今 Web 的现代 JavaScript 框架",
+	"hero.subtitle.start": "细粒度响应式全栈开发",
+	"hero.button.primary": "开始使用",
+	"hero.button.secondary": "加入社区",
 
 	// main navigation
-	"main.nav.tab.learn": "Learn",
-	"main.nav.tab.reference": "Reference",
-	"main.nav.section.concepts": "Concepts",
-	"main.nav.section.components": "Components",
-	"main.nav.section.control.flow": "Control Flow",
+	"main.nav.tab.learn": "学习",
+	"main.nav.tab.reference": "参考",
+	"main.nav.section.concepts": "概念",
+	"main.nav.section.components": "组件",
+	"main.nav.section.control.flow": "控制流",
 	"main.nav.section.derived.values": "Derived Values",
 	"main.nav.section.routing": "Routing",
 	"main.nav.section.advanced.concepts": "Advanced Concepts",
@@ -33,16 +33,16 @@ export default {
 	"main.nav.no.routes": "No routes found",
 
 	// ToC
-	"toc.this.page": "On this page",
-	"toc.overview": "Overview",
-	"contribute.title": "Contribute",
-	"contribute.edit": "Edit this page",
-	"contribute.report": "Report an issue with this page",
+	"toc.this.page": "目录",
+	"toc.overview": "前言",
+	"contribute.title": "贡献",
+	"contribute.edit": "编辑此页面",
+	"contribute.report": "报告此页面问题",
 
 	// pagination
-	"pagination.next": "Next",
-	"pagination.previous": "Previous",
+	"pagination.next": "下一个",
+	"pagination.previous": "上一个",
 
 	// 404
-	"missing.translation": "This section has not yet been translated",
+	"missing.translation": "这部分还没有被翻译",
 } as const;
