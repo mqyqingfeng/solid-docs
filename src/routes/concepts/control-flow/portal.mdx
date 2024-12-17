@@ -3,61 +3,56 @@ title: "Portal"
 order: 3
 ---
 
-When an element requires rendering outside of the usual document flow, challenges related to stacking contents and z-index can interfere with the desired intention or look of an application.
-`<Portal>` helps with this by putting elements in a different place in the document, bringing an element into the document flow so they can render as expected.
+`<Portal>` 可以将元素放在文档中的不同位置：
 
 ```jsx
-import { Portal } from "solid-js/web"
+import { Portal } from "solid-js/web";
 
 <Portal>
 	<div class="popup">...</div>
-</Portal>
+</Portal>;
 ```
 
-The content nested within `<Portal>` is rendered and positioned by default at the end of the document body.
+嵌套在 `<Portal>` 中的内容默认渲染在文档 body 的末尾。
 
 <EraserLink
 	href="https://app.eraser.io/workspace/maDvFw5OryuPJOwSLyK9?elements=IEPk0uiH2OC365hkpKf3wA"
 	preview="https://app.eraser.io/workspace/maDvFw5OryuPJOwSLyK9/preview?elements=IEPk0uiH2OC365hkpKf3wA&type=embed"
 />
 
-This can be changed by passing a `mount` prop to `<Portal>`.
-The `mount` prop accepts a [DOM node](https://developer.mozilla.org/en-US/docs/Web/API/Node), which will be used as the mount point for the portal content.
+位置可以通过传递给 `<Portal>`的 `mount` 属性来更改。`mount` 属性接收一个 [DOM 节点](https://developer.mozilla.org/en-US/docs/Web/API/Node)，该节点将用作 Portal 内容的挂载点。
 
 ```jsx
-import { Portal } from "solid-js/web"
+import { Portal } from "solid-js/web";
 
 <Portal mount={document.querySelector("main")}>
 	<div class="popup">...</div>
-</Portal>
+</Portal>;
 ```
 
-
-Using `<Portal>` can be particularly useful in cases where elements, like information popups, might be clipped or obscured due to the overflow settings of their parent elements.
-By putting the element outside of the parent element, it is no longer bound by the overflow settings of its parent.
-This creates a more accessible experience for users, as the content is no longer obscured.
-
+当元素（例如信息弹出窗口）由于父元素的溢出设置而被剪切或遮挡时，使用 `<Portal>` 特别有用。通过将该元素放在父元素之外，它就不再受其父元素的溢出设置的约束。这为用户创造了更易于访问的体验，因为内容不再复杂。
 
 <Callout>
-  `<Portal>` will render wrapped unless specifically targeting `document.head`.
+`<Portal>` 渲染的时候将会包一层元素，除非专门针对 `document.head` 。
 
-  This is so events propagate through the Portal according to the component hierarchy instead of the elements hierarchy.
+这样事件就可以根据组件层次结构而非元素层次结构进行传播。
 
-By default, children will wrap in a `<div>`. If you portal into an SVG, then the `isSVG` prop must be used to avoid wrapping the children in a `<div>` and wrap in a `<g>` instead.
+默认情况下，子级将包裹在 `<div>` 中。但如果您要放入 SVG 中，则必须使用 `isSVG` prop 来避免将子项包在 `<div>` 中，此时将转为包在 `<g>` 中。
 
 ```jsx
-import { Portal } from "solid-js/web"
+import { Portal } from "solid-js/web";
 
 function Rect() {
-  return (
-    <Portal mount={document.querySelector("svg")} isSVG={true}>
-      <rect fill="red" x="25" y="25" height="50" width="50" />
-    </Portal>
-  );
+	return (
+		<Portal mount={document.querySelector("svg")} isSVG={true}>
+			<rect fill="red" x="25" y="25" height="50" width="50" />
+		</Portal>
+	);
 }
 
 function SVG() {
-  return <svg xmlns="http://www.w3.org/2000/svg" />;
+	return <svg xmlns="http://www.w3.org/2000/svg" />;
 }
 ```
+
 </Callout>

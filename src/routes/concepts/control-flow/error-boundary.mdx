@@ -3,26 +3,23 @@ title: "Error boundary"
 order: 5
 ---
 
-`<ErrorBoundary>` is a component that can be used to catch errors thrown by child components.
-When encountering an error, this component will render a fallback UI instead of the problematic child component(s).
+`<ErrorBoundary>` 是一个可用于捕获子组件抛出的错误的组件。当遇到错误时，该组件将呈现 fallback UI，而不是有问题的子组件。
 
 ```jsx
 import { ErrorBoundary } from "solid-js";
 
 <ErrorBoundary fallback={(err) => <div>Error: {err.message}</div>}>
 	<ProblematicComponent />
-</ErrorBoundary>
+</ErrorBoundary>;
 ```
 
-`<ErrorBoundary>` accepts a `fallback` prop that can be used to render a custom error message, or to provide a friendly notification to the user.
-This prop accepts a function that receives the caught error as an argument, providing a flexible way to handle different error scenarios.
+`<ErrorBoundary>` 接收一个 `fallback` prop，用于渲染自定义错误消息，或者向用户提供友好的通知。该属性接收一个函数，该函数接收捕获的错误作为参数，提供了一种灵活的方法来处理不同的错误场景。
 
 <EraserLink
 	href="https://app.eraser.io/workspace/maDvFw5OryuPJOwSLyK9?elements=aSw5yYrSY22mI_YqoZlpGQ"
 	preview="https://app.eraser.io/workspace/maDvFw5OryuPJOwSLyK9/preview?elements=aSw5yYrSY22mI_YqoZlpGQ&type=embed"
 />
 
-By wrapping parts of your application in `<ErrorBoundary>`, you can prevent the entire application from crashing when an error occurs due to a single component.
+通过将应用程序的某些部分包装在 `<ErrorBoundary>` 中，您可以防止由于单个组件而发生错误时整个应用程序崩溃。
 
-When an error is encountered, the `<ErrorBoundary>` component will catch the error and render the fallback UI instead of the problematic component(s).
-This way, even when a component fails, the user has a controlled UI response instead of a broken interface.
+当遇到错误时，`<ErrorBoundary>` 组件将捕获错误并渲染 fallback UI，而不是有问题的组件。这样，即使组件发生错误，用户也可以得到受控的 UI 响应，而不是损坏的界面。

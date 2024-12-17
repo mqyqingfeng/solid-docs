@@ -1,30 +1,24 @@
 ---
-title: Derived signals
+title: 派生信号
 order: 1
 ---
 
-Derived signals are functions that rely on one or more [signals](/concepts/signals) to produce a value.
+派生信号是依赖一个或多个[信号](/concepts/signals)来产生值的函数。
 
-These functions are not executed immediately, but instead are only called when the values they rely on are changed.
-When the underlying signal is changed, the function will be called again to produce a new value.
+这些函数不会立即执行，而是仅在它们所依赖的值发生改变时才被调用。当底层信号改变时，该函数将被再次调用以产生新值。
 
 ```js
 const double = () => count() * 2;
 ```
 
-In the above example, the `double` function relies on the `count` signal to produce a value.
-When the `count` signal is changed, the `double` function will be called again to produce a new value.
+在上面的示例中，`double` 函数依赖于 `count` 信号来生成值。当 `count` 信号改变时，`double` 函数将被再次调用以产生新值。
 
-Similarly you can create a derived signal that relies on a store value because stores use signals under the hood.
-To learn more about how stores work, [you can visit the stores section](/concepts/stores).
+同样，您可以创建依赖于 store 的派生信号，因为 store 幕后也是使用信号。要了解有关 store 如何运作，您可以访问[store 章节](you%20can%20visit%20the%20stores%20section)。
 
 ```js
-const fullName = () => store.firstName + ' ' + store.lastName;
+const fullName = () => store.firstName + " " + store.lastName;
 ```
 
-These dependent functions gain reactivity from the signal they access, ensuring that changes in the underlying data propagate throughout your application. 
-It is important to note that these functions do not store a value themselves; instead, they can update any effects or components that depend on them. 
-If included within a component's body, these derived signals will trigger an update when necessary.
+这些依赖函数从它们访问的信号中获得响应式，确保底层数据的更改在整个应用程序中传播。需要注意的是，这些函数本身并不存储值；相反， 它们可以更新依赖于它们的任何 effect 或组件。如果包含在组件主体中，这些派生信号将在必要时触发更新。
 
-While you can create derived values in this manner, Solid created the [`createMemo`](/reference/basic-reactivity/create-memo) primitive.
-To dive deeper into how memos work, [check out the memos section](/concepts/derived-values/memos).
+虽然您可以通过这种方式创建派生值，但 Solid 创建了 [createMemo](/reference/basic-reactivity/create-memo)。要更深入地了解 memos 如何工作，请查看 [memos 章节](/concepts/derived-values/memos)。

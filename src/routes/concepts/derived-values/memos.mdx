@@ -3,45 +3,37 @@ title: Memos
 order: 2
 ---
 
-Memos are a type of reactive value that can be used to memoize derived state or expensive computations.
-They are similar to [derived signals](/concepts/derived-values/derived-signals) in that they are reactive values that automatically re-evaluate when their dependencies change.
-However, unlike derived signals, memos are optimized to execute only once for each change in their dependencies.
+Memos 是一种响应式值，用于记忆化派生装填或昂贵计算。它们与派生信号类似于，因为它们都是响应式值，当它们的依赖关系发生变化时，会自动重新评估。然而，与派生信号不同，memos 经过优化，只对其依赖项的每次更改执行一次。
 
-Memos expose a _read-only_ reactive value (like a [signal](/concepts/signals)) and track changes in their dependencies (similar to an [effect](/concepts/effects)).
-This makes them useful for caching the results of expensive or frequently accessed computations.
-By doing this, memos minimize unnecessary work within an application by retaining the results of a computation until its dependencies change.
+Memos 提供一个只读响应式值（类似于信号），并跟踪其依赖项的变化（类似于效果）。这使得它们对于昂贵计算或频繁访问的计算结果非常有用。通过这样做，memos 会保留计算记过直到其依赖项发生变化，从而最大限度的减少应用程序中不必要的工作。
 
-## Using memos
+## 使用 memos
 
-A memo is created using the `createMemo` function.
-Within this function, you can define the derived value or computations you wish to memoize.
-When called, `createMemo` will return a **getter** function that reads the current value of the memo:
+使用 `createMemo` 函数创建一个 memo。在此函数中，您可以定义你希望记忆化的派生值或者计算。调用时，`createMemo`将返回一个 getter 函数，该函数用于读取 memo 的当前值：
 
 ```jsx
-import { createMemo, createSignal } from "solid-js"
+import { createMemo, createSignal } from "solid-js";
 
-const [count, setCount] = createSignal(0)
+const [count, setCount] = createSignal(0);
 
-const isEven = createMemo(() => count() % 2 === 0)
+const isEven = createMemo(() => count() % 2 === 0);
 
-console.log(isEven()) // true
+console.log(isEven()); // true
 
-setCount(3)
-console.log(isEven()) // false
+setCount(3);
+console.log(isEven()); // false
 ```
 
-While memos look similar to effects, they are different in that they _return a value_.
-This value is the result of the computation or derived state that you wish to memoize.
+虽然 memo 看起来与 effect 相似，但它们的不同之处在于它们返回一个值。该值是您希望记住的计算结果或派生状态。
 
-### Advantages of using memos
+### 使用 memos 的优势
 
-While you can use a [derived signal](/concepts/derived-values/derived-signals) to achieve similar results, memos offer distinct advantages:
+虽然您可以使用[派生信号](/concepts/derived-values/derived-signals)来获得类似的结果，但 memos 具有明显的优势：
 
-- Memos are optimized to execute only once for each change in their dependencies.
-- When working with expensive computations, memos can be used to cache the results so they are not recomputed unnecessarily.
-- A memo will only recompute when its dependencies change, and will not trigger subsequent updates (as determined by [`===` or strict equality](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Strict_equality)) if its dependencies change but its value remains the same.
-- Any signal or memo accessed within a memo's function is **tracked**.
-  This means that the memo will re-evaluate automatically when these dependencies change.
+- Memos 经过优化，只对其依赖项的每次更改执行一次
+- 当处理昂贵的计算时，可以使用 memos 缓存结果，这样就不会不必要地重新计算它们。
+- memos 仅在其依赖项发生变化时才会重新计算，并且如果其依赖项发生变化但其值保持不变，则不会触发后续更新（由 === 或[严格相等](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Strict_equality)确定）。
+- memos 函数中的任何信号或 memo 都会被追踪。这意味着当这些依赖项发生变化时，memos 将自动重新评估。
 
 <EraserLink
 	href="https://app.eraser.io/workspace/maDvFw5OryuPJOwSLyK9?elements=ACJTLvgPnReEQszYSUwoLw"
@@ -50,98 +42,91 @@ While you can use a [derived signal](/concepts/derived-values/derived-signals) t
 
 ## Memo vs. effect
 
-Both memos and effects are important when managing reactive computations and side effects.
-They, however, serve different purposes and each has their own unique behaviors.
+在管理响应式计算和副作用时，Memo 和 effect 都很重要。然而，它们有不同的目的，并且各自有自己独特的行为。
 
-|                      | Memos                                                                                                      | Effects                                                                      |
-| -------------------- | ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| Return value         | Yes - returns a getter for the result of the computation or derived state.                                 | Does not return a value but executes a block of code in response to changes. |
-| Caches results       | Yes                                                                                                        | No                                                                           |
-| Behavior             | Function argument should be pure without reactive side effects.                                            | Function argument can cause side effects like UI updates or data fetches.    |
-| Dependency tracking. | Yes                                                                                                        | Yes                                                                          |
-| Example use cases    | Transforming data structures, computing aggregated values, derived state, or other expensive computations. | UI updates, network requests, or external integrations.                      |
+|          | Memos                                                | Effects                                        |
+| -------- | ---------------------------------------------------- | ---------------------------------------------- |
+| 返回值   | 是 - 返回计算结果或派生状态的 getter。               | 不返回值，但执行代码块以响应更改。             |
+| 缓存结果 | 是                                                   | 否                                             |
+| 行为     | 函数参数应该是纯的，没有响应式副作用。               | 函数参数可能会导致 UI 更新或数据获取等副作用。 |
+| 依赖追踪 | 是                                                   | 是                                             |
+| 示例用例 | 转换数据结构、计算聚合值、派生状态或其他昂贵的计算。 | UI 更新、网络请求或外部集成                    |
+|          |
 
-## Best practices
+## 最佳实践
 
-### Pure functions
+### 纯函数
 
-When working with memos, it is recommended that you leave them "pure".
+使用 memos 时，建议您将其写为纯函数：
 
 ```jsx
-import { createSignal, createMemo } from "solid-js"
+import { createSignal, createMemo } from "solid-js";
 
-const [count, setCount] = createSignal(0)
-const isEven = createMemo(() => count() % 2 === 0) // example of a pure function
+const [count, setCount] = createSignal(0);
+const isEven = createMemo(() => count() % 2 === 0); // example of a pure function
 ```
 
-A pure function is one that does not cause any side effects.
-This means that the function's output should solely depend on its inputs.
+纯函数是指不会导致任何副作用的函数。这意味着函数的输出应该仅取决于其输入。
 
-When you introduce side effects into a memo, it can complicate the reactivity chain.
-This can lead to unexpected behavior, such as infinite loops, that lead your application to crash.
+当您在 memos 中引入副作用时，它会使反应链变得复杂。这可能会导致意外行为，例如无限循环，从而导致应用程序崩溃。
 
 ```jsx
-import { createSignal, createMemo } from "solid-js"
+import { createSignal, createMemo } from "solid-js";
 
-const [count, setCount] = createSignal(0)
-const [message, setMessage] = createSignal("")
+const [count, setCount] = createSignal(0);
+const [message, setMessage] = createSignal("");
 
 const badMemo = createMemo(() => {
 	if (count() > 10) {
-		setMessage("Count is too high!") //  side effect
+		setMessage("Count is too high!"); //  side effect
 	}
-	return count() % 2 === 0
-})
+	return count() % 2 === 0;
+});
 ```
 
-These infinite loops can be triggered when a memo has a side effect that causes its dependencies to change.
-This will cause the memo to re-evaluate, which will then trigger the side effect again, and so on until the application crashes.
+当 memos 具有导致其依赖关系发生变化的副作用时，可能会触发无限循环。这将导致 memos 重新评估，然后再次触发副作用，依此类推，直到应用程序崩溃。
 
-This can be avoided by using a [`createEffect`](/reference/basic-reactivity/create-effect) to handle the side effects instead:
+可以通过使用 [createEffect](/reference/basic-reactivity/create-effect) 来处理副作用来避免这种情况：
 
 ```jsx
-import { createSignal, createMemo, createEffect } from "solid-js"
+import { createSignal, createMemo, createEffect } from "solid-js";
 
-const [count, setCount] = createSignal(0)
-const [message, setMessage] = createSignal("")
+const [count, setCount] = createSignal(0);
+const [message, setMessage] = createSignal("");
 
-const isEven = createMemo(() => count() % 2 === 0)
+const isEven = createMemo(() => count() % 2 === 0);
 
 createEffect(() => {
 	if (count() > 10) {
-		setMessage("Count is too high!")
+		setMessage("Count is too high!");
 	}
-})
+});
 ```
 
-Here, the `createEffect` will handle the side effects, while the `isEven` memo will remain pure.
+在这里， `createEffect` 将处理副作用，而 `isEven` memo 将保持为纯函数。
 
-### Keep logic in memos
+### 在 memos 中保留逻辑
 
-Memos are optimized to execute only once for each change in their dependencies.
-This means that you can remove unnecessary effects that are triggered by a memo's dependencies.
+Memos 经过优化，只会对其依赖项的每次改变执行一次。这意味着您可以删除由 Memos 的依赖项触发的不必要的效果。
 
-When working with derived state, memos are the recommended approach over effects.
-Keeping the logic in a memo prevents unnecessary re-renders that can occur when using an effect.
-Similarly, effects are better suited to handle side effects, such as DOM updates, rather than derived state.
-This separation of concerns can help keep your code clean and easy to understand.
+在处理派生状态时，Memos 是优于 effects 的推荐方法。将逻辑保留在 Memos 中可以防止使用 effects 时可能发生的不必要的重新渲染。同样，effects 更适合处理副作用，例如 DOM 更新，而不是派生状态。这种关注点分离可以帮助保持代码整洁且易于理解。
 
 ```jsx
-// effect - runs whenever `count` changes
+// effect - 无论何时 `count` 改变都会运行
 createEffect(() => {
 	if (count() > 10) {
-		setMessage("Count is too high!")
+		setMessage("Count is too high!");
 	} else {
-		setMessage("")
+		setMessage("");
 	}
-})
+});
 
-// memo - only runs when `count` changes to or from a value greater than 10
+// memo - 只有当 `count` 改变到值大于 10 ，才会运行
 const message = createMemo(() => {
 	if (count() > 10) {
-		return "Count is too high!"
+		return "Count is too high!";
 	} else {
-		return ""
+		return "";
 	}
-})
+});
 ```

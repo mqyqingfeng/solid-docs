@@ -3,13 +3,11 @@ title: Effects
 order: 4
 ---
 
-Effects are functions that are triggered when the signals they depend on change.
-They play a crucial role in managing side effects, which are actions that occur outside of the application's scope, such as DOM manipulations, data fetching, and subscriptions.
+Effects 是当它们所依赖的信号发生变化时触发的函数。它们在管理副作用方面发挥着至关重要的作用，副作用是指在应用程序范围之外发生的操作，例如 DOM 操作、数据获取和订阅。
 
-## Using an effect
+## 使用 effect
 
-An effect is created using the `createEffect` function.
-This function takes a callback as its argument that runs when the effect is triggered.
+使用 `createEffect` 函数创建 effect。该函数采用一个回调函数作为参数，该回调在 effect 被触发时运行。
 
 ```jsx
 import { createEffect } from "solid-js";
@@ -21,19 +19,13 @@ createEffect(() => {
 });
 ```
 
-In this example, an effect is created that logs the current value of `count` to the console.
-When the value of `count` changes, the effect is triggered, causing it to run again and log the new value of `count`.
+在这个例子中，就创建了一个 effect，将 `count` 的当前值打印到控制台。当 `count` 的值发生变化时，会触发该 effect，使其再次运行并打印 `count` 的新值。
 
-## Managing dependencies
+## 管理依赖关系
 
-Effects can be set to observe any number of dependencies.
-Dependencies are what allow an effect to track changes and respond accordingly.
-These can include signals, variables, props, context, or any other reactive values.
-When any of these change, the effect is notified and will run again to update its state.
+Effects 可以设置任意数量的依赖项。依赖项允许 effect 追踪改变并做出响应。这些可以包括信号、变量、props、上下文或其他响应值。当其中任何一个发生变化时，effect 都会接收通知，并将再次运行以更新状态。
 
-Upon initialization, an effect will run _once_, regardless of whether it has any dependencies.
-This is useful for setting up the effect and initializing variables or subscribing to [signals](/concepts/signals).
-After this run, the effect will only be triggered when any of its _dependencies_ change.
+初始化后，effect 将运行一次，无论它是否有任何依赖项。这对于设置 effect 和初始化变量或订阅[信号](/concepts/signals)非常有用。运行后，仅当其任何依赖项发生更改时才会再次触发 effect。
 
 ```jsx
 createEffect(() => {
@@ -45,13 +37,11 @@ createEffect(() => {
 });
 ```
 
-Solid automatically tracks the dependencies of an effect, so you do not need to manually specify them.
-This improves the tracking and minimizes the chances of overlooking or incorrectly identifying dependencies.
+Solid 会自动追踪 effect 的依赖项，因此无需手动指定它们。这改善了追踪并最大限度地减少了忽略或错误识别依赖项的可能。
 
-## Subscribing to signals
+## 订阅信号
 
-When an effect is set to observe a signal, it creates a subscription to it.
-This subscription allows the effect to track the changes in the signal's value, which causes it to observe any changes that may happen and to execute its callback accordingly.
+当 effect 被设置为观察一个信号时，它会创建对该信号的订阅。此订阅允许 effect 追踪信号值的变化，从而观察可能发生的任何变化并相应地执行其回调。
 
 ```jsx
 import { createSignal, createEffect } from "solid-js";
@@ -63,15 +53,11 @@ createEffect(() => {
 });
 ```
 
-### Managing multiple signals
+### 管理多个信号
 
-Effects have the ability to observe multiple signals.
-A single effect can subscribe to multiple signals, and similarly, multiple effects can keep track of a single signal.
-This is useful when you need to update the UI based on multiple signals.
+Effect 具有观察多个信号的能力。单个 Effect 可以订阅多个信号，同样，多个 Effect 可以跟踪单个信号。当您需要根据多个信号更新 UI 时，这非常有用。
 
-When multiple signals are observed within a single effect, it will execute its callback whenever _any_ of the signals change.
-The effect will run even if only one of the signals changes, not necessarily all of them.
-This means that the effect will run with the latest values of all of the signals that it is observing.
+当在单个 Effect 中观察到多个信号时，只要任何信号发生变化，它将执行回调。即使只有一个信号发生变化（不一定是所有信号发生变化），效果也会运行。这意味着该 Effect 将以其正在观察的所有信号的最新值运行。
 
 ```jsx
 import { createSignal, createEffect } from "solid-js";
@@ -88,15 +74,14 @@ setMessage("World"); // Output: 1, "World"
 ```
 
 <Callout>
-When a signal updates, it notifies all of its subscribers sequentially but the *order can vary*. 
-While effects are guaranteed to run when a signal updates, the execution might **not** be instantaneous. 
-This means that the order of execution of effects is *not guaranteed* and should not be relied upon.
+	当信号更新时，它会按顺序通知所有订阅者，但顺序可能会有所不同。虽然 effect
+	保证在信号更新时运行，但执行可能不是即时的。这意味着 effect
+	的执行顺序不受保证且不应依赖。
 </Callout>
 
-### Nested effects
+### 嵌套 effects
 
-When working with effects, it is possible to nest them within each other.
-This allows each effect to independently track its own dependencies, without affecting the effect that it is nested within.
+使用 effects 时，可以将它们相互嵌套。这允许每个 effect 独立跟踪其自身的依赖关系，而不影响其嵌套的效果。
 
 ```jsx
 createEffect(() => {
@@ -106,10 +91,7 @@ createEffect(() => {
 });
 ```
 
-The order of execution is important to note.
-An inner effect will _not_ affect the outer effect.
-Signals that are accessed within an inner effect, will _not_ be registered as dependencies for the outer effect.
-When the signal located within the inner effect changes, it will trigger only the _inner effect_ to re-run, not the outer one.
+需要注意执行顺序很重要。内部 effect 不会影响外部 effect。在内部 effect 中访问的信号不会注册为外部effect 的依赖项。当位于内部 effect 内的信号发生变化时，只会触发内部 effect 重新运行，而不会触发外部 effect 重新运行。
 
 ```jsx
 import { createSignal, createEffect } from "solid-js";
@@ -123,20 +105,16 @@ createEffect(() => {
 });
 ```
 
-This forces each effect to be independent of each other, which helps to avoid unexpected behaviour.
-Additionally, it allows you to create effects that are only triggered when certain conditions are met.
+这迫使每个 effect 彼此独立，这将有助于避免意外行为。此外，它还允许您创建仅在满足特定条件时触发的 effect。
 
-## Lifecycle functions
+## 生命周期函数
 
-Effects have a lifecycle that can be managed using certain functions.
-These functions allow you to control the initialization and disposal of effects to build the type of behaviour that you need.
-This can include running a side effect only once, or cleaning up a task when it is no longer needed.
+effect 具有可以使用某些函数进行管理的生命周期。这些函数允许您控制 effect 的初始化和处理，以构建您需要的行为类型。这可以包括仅运行一次副作用，或者在不再需要时清理任务。
 
 ### `onMount`
 
-In situations where you just want to run a side effect **once**, you can use the [`onMount`](/reference/lifecycle/on-mount) function.
-This lifecycle function is similar to an effect, but it does not track any dependencies.
-Rather, once the component has been initialized, the `onMount` callback will be executed and will not run again.
+`onMount`
+在您只想运行一次副作用的情况下，可以使用 [onMount](/reference/lifecycle/on-mount) 函数。此生命周期函数类似于 effect，但它不跟踪任何依赖项。相反，一旦组件初始化，`onMount` 回调将被执行并且不会再次运行。
 
 ```jsx
 import { onMount } from "solid-js";
@@ -158,14 +136,11 @@ function Component() {
 }
 ```
 
-`onMount` provides the assurance that the callback will only run once.
-If using an effect in this situation, there is no guarantee that it will only run once, which can lead to unexpected behaviour.
-This makes `onMount` useful for API calls and other side effects that only need to be run once per component instance.
+`onMount` 保证回调只会运行一次。如果在这种情况下使用 effect，则不能保证它只会运行一次，这可能会导致意外的行为。这使得 onMount 对于 API 调用和其他副作用非常有用，每个组件实例只需运行一次。
 
 ### `onCleanup`
 
-While `onMount` is useful for running a side effect once, [`onCleanup`](/reference/lifecycle/on-cleanup) is helpful for cleaning up a task when it is no longer needed.
-`onCleanup` will run whenever the component unmounts, removing any subscriptions that the effect has.
+`onMount` 对于运行一次副作用很有用，而 `onCleanup` 对于不再需要任务时清理任务很有帮助。 `onCleanup` 将在组件卸载时运行，删除 effect 具有的订阅。
 
 ```jsx
 import { onCleanup } from "solid-js";
@@ -185,9 +160,6 @@ function App() {
 }
 ```
 
-In this example, the `onCleanup` function is used to clear the interval that is set up in the effect.
-To avoid the interval from running indefinitely, the `onCleanup` function is used to clear the interval once the component unmounts.
+在这个例子中，`onCleanup` 函数用于清除 effect 中设置的定时器。为了避免定时器无限期地运行，`onCleanup` 函数用于在组件卸载后清除定时器。
 
-`onCleanup` can be used to avoid memory leaks.
-These occur when a component is unmounted, but references to it still exist and, as a result, could still be running in the background.
-Using `onCleanup` to remove any subscriptions or references to the component can help to avoid this issue.
+`onCleanup` 可用于避免内存泄漏。当组件被卸载但对其的引用仍然存在并且因此可能仍然在后台运行时，就会发生这些情况。使用 `onCleanup` 删除对该组件的任何订阅或引用可以帮助避免此问题。

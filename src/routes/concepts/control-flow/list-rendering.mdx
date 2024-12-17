@@ -1,47 +1,43 @@
 ---
-title: "List rendering"
+title: "列表渲染"
 order: 3
 ---
 
-List rendering allows you to generate multiple elements from a collection of data, such as an array or object, where each element corresponds to an item in the collection.
+列表渲染用于渲染数据集合（例如数组或对象）。
 
-When dealing with dynamic data, Solid offers two ways to render lists: the `<For>` and `<Index>` components.
-Both of these components help you loop over data collections to generate elements, however, they both cater to different scenarios.
+Solid 提供了两种渲染列表的方式：`<For>` 和`<Index>` 组件。这两个组件都可以遍历数据集合生成元素，但它们适合不同的场景。
 
 ## `<For>`
 
-`<For>` is a looping component that allows you to render elements based on the contents of an array or object.
-This component is designed to be used with **complex data structures**, such as arrays of objects, where the order and length of the list may change frequently.
+`<For>` 是一个循环组件，允许您根据数组或对象的内容渲染元素。该组件被设计用于**复杂的数据结构**，例如对象数组，其中列表的顺序和长度可能会频繁更改。
 
-The sole property in `<For>` is `each` , through which you can specify the data collection to loop over.
-This property expects an array, however, it can also accept objects that have been converted to arrays using utilities such as [`Object.entries`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries) or [`Object.values`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/values).
+`<For>` 的唯一属性是 `each` ，用于指定要循环的数据集合。此属性需要一个数组，如果使用对象，需要先通过 [Object.entries](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries) 或 [Object.values](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/values) 等方法转换为数组。
 
 ```jsx
 import { For } from "solid-js"
 
 <For each={data()}>
   {(item, index) =>
-    // rendering logic for each element
+    // 每个元素的渲染逻辑
   }
 </For>
 ```
 
-Between the `<For>` tags, the component requires a [callback function](https://developer.mozilla.org/en-US/docs/Glossary/Callback_function) which will dictate how each item in the data collection should be rendered.
-This structure resembles the callback used within JavaScript's [`map`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map) method, providing a familiar pattern to follow.
+在 `<For>` 标签之间，组件需要一个[回调函数](https://developer.mozilla.org/en-US/docs/Glossary/Callback_function)，该函数将指定如何渲染数据集合中的每个条目。此结构类似于 JavaScript 的 [map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map) 方法中使用的回调。
 
-The function receives two arguments:
-- `item`: represents the current item in the data collection that is being rendered over.
-- `index`: the current item's index within the collection.
+该函数接收两个参数：
 
-You can access the current `item` and `index` to dynamically set attributes or content of the JSX elements.
-Index is a [*signal*](/concepts/signals) and must be called as a function to retrieve its value.
+- `item`: 表示正在渲染的数据集合中的当前条目。
+- `index`: 表示当前条目的索引。
+
+您可以访问当前的 `item` 和 `index` 来动态设置 JSX 元素的属性或内容。 `index` 是一个[信号](/concepts/signals)，必须作为函数调用才能获取其值。
 
 ```jsx
 <For each={data()}>
 	{(item, index) => (
 		<li
 			style={{
-				color: index() % 2 === 0 ? "red" : "blue"
+				color: index() % 2 === 0 ? "red" : "blue",
 			}}
 		>
 			{item.name}
@@ -52,27 +48,24 @@ Index is a [*signal*](/concepts/signals) and must be called as a function to ret
 
 ## `Index`
 
-`<Index>`, similar to `<For>`, is a looping component that allows you to render elements based on the contents of an array or object.
-However, when the order and length of the list remain _stable_, but the content may change frequently, `<Index>` is a better option because it results in fewer re-renders.
+`<Index>` 与 `<For>` 类似，也是一个循环组件，允许您根据数组或对象的内容渲染元素。但是，当列表的顺序和长度保持稳定，但内容可能频繁更改时，`<Index>` 是更好的选择，因为它会减少重新渲染的次数。
 
 ```jsx
 import { Index } from "solid-js"
 
 <Index each={data()}>
 	{(item, index) => (
-		// rendering logic for each element
+		// 每个元素的渲染逻辑
 	)}
 </Index>
 ```
 
-Similar to the `<For>` component, `<Index>` accepts a single property named `each`, which is where you pass the structure you wish to loop over.
+与 `<For>` 组件类似， `<Index>` 接受名为 `each` 的单个属性，用于指定要循环遍历的结构。
 
-Where the `index` is a signal with `<For>`, it remains fixed with `<Index>`.
-This is because `<Index>` is more concerned with the **index** of the elements in the array.
-Because of this, the `item` is a signal, allowing the _content_ at each index to change without a re-render while the index remains fixed.
+在 `<For>`中，`index` 是一个信号，但在 `<Index>` 中是固定的。这是因为 `<Index>` 更关心带有索引的元素，因此，`item`是一个信号，允许每个索引的内容更改而无需重新渲染，同时索引保持固定。
 
 ```jsx
-import { Index } from "solid-js"
+import { Index } from "solid-js";
 
 <Index each={data()}>
 	{(item, index) => (
@@ -80,60 +73,53 @@ import { Index } from "solid-js"
 			{item().name} - {item().completed}
 		</li>
 	)}
-</Index>
+</Index>;
 ```
 
 ## `<Index>` vs `<For>`
 
-`<For>` is designed to be used when the *order* and *length* of the list may change frequently.
-When the list value changes in `<For>`, the entire list is re-rendered.
-However, if the array undergoes a change, such as an element shifting position, `<For>` will manage this by simply **moving** the corresponding DOM node and **updating** the index.
+`<For>` 用于列表的顺序和长度可能频繁变化的情况。当 `<For>` 中的列表值发生变化时，整个列表将重新渲染。但是，如果数组发生更改，例如元素移动位置，`<For>` 将通过简单地移动相应的 DOM 节点并更新索引来管理这种情况。
 
-`<Index>`, however, is designed to be used when the **order** and **length** of the list remain _stable_, but the content may change frequently.
-When the list value changes in `<Index>`, only the content at the specified index is updated.
+`<Index>` 用于当列表的顺序和长度保持稳定，但内容可能频繁变化时。当 `<Index>` 中的列表值发生变化时，仅更新指定索引处的内容。
 
 ### When to use `<For>`
 
-In cases where signals, nested loops, or dynamic lists are not required, `<For>` is the best option.
-For example, when creating a list of static elements, such as a list of links, `<For>` is the best option to use.
-This is because it will only modify the indexes of the elements in the list, rather than re-rendering the entire list.
+在不需要信号、嵌套循环或动态列表的情况下，`<For>` 是最佳选择。例如，在创建静态元素列表（例如链接列表）时，`<For>` 是最好的选择。这是因为它只会修改列表中元素的索引，而不会重新渲染整个列表。
 
 ```jsx
-import { createSignal, For } from "solid-js"
+import { createSignal, For } from "solid-js";
 
 function StringList() {
-	const [items, setItems] = createSignal(["Item 1", "Item 2", "Item 3"])
+	const [items, setItems] = createSignal(["Item 1", "Item 2", "Item 3"]);
 
 	return (
 		<ul>
-			<input 
+			<input
 				type="text"
 				onInput={(e) => {
-					// add the new item to the list
+					// 向列表添加新的条目
 				}}
 			/>
 			<For each={items()}>
 				{(item, index) => (
-					<li> 
+					<li>
 						{item} - {index()}
 					</li>
 				)}
 			</For>
 		</ul>
-	)
+	);
 }
 ```
 
-If you are working with signals, [JavaScript primitives like strings and numbers](https://developer.mozilla.org/en-US/docs/Glossary/Primitive) or input fields, `<Index>` is the better option to use.
-If you were using `<For>`, the entire list would be re-rendered when a value changes, even if the length of the list remains unchanged.
-`<Index>`, instead, will update the content at the specified index, while the rest of the list remains unchanged.
+如果您正在使用信号、JavaScript [原始值](https://developer.mozilla.org/en-US/docs/Glossary/Primitive)（例如字符串和数字）或输入字段，`<Index>` 是更好的选择。如果您使用 `<For>` ，则当值更改时，即使列表的长度保持不变，整个列表也会重新渲染。而 `<Index>` 将更新指定索引处的内容，列表的其余部分保持不变。
 
 ```jsx
-import { createSignal, Index } from "solid-js"
+import { createSignal, Index } from "solid-js";
 
 function FormList() {
-	const [inputs, setInputs] = createSignal(['input1','input2','input3'])
-	return(
+	const [inputs, setInputs] = createSignal(["input1", "input2", "input3"]);
+	return (
 		<form>
 			<Index each={inputs()}>
 				{(input, index) => (
@@ -141,12 +127,12 @@ function FormList() {
 						type="text"
 						value={input()}
 						onInput={(e) => {
-							// update the input value
+							// 更新 input 值
 						}}
 					/>
 				)}
 			</Index>
 		</form>
-	)
+	);
 }
 ```
