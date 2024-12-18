@@ -3,19 +3,16 @@ title: Stores
 order: 6
 ---
 
-Similar to [signals](/concepts/signals), stores are a state management primitive.
-However, while signals manage a single piece of state, stores create a centralized location to reduce code redundancy.
-Within Solid, these stores can spawn a collection of reactive signals, each corresponding to a particular property which can be useful when working with complex state.
+与[信号](/concepts/signals)类似，Stores 也用于状态管理。不过信号管理单个状态，Stores 会创建一个集中位置以减少代码冗余。在 Solid 中，这些 stores 可以生成一组响应式信号，每个信号对应一个特定的属性，这在处理复杂状态时非常有用。
 
-## Creating a store
+## 创建一个 store
 
-Stores can manage many data types, including: objects, arrays, strings, and numbers.
+Stores 可以管理多种数据类型，包括：对象、数组、字符串和数字。
 
-Using JavaScript's [proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) mechanism, reactivity extends beyond just the top-level objects or arrays.
-With stores, you can now target nested properties and elements within these structures to create a dynamic tree of reactive data.
+使用 JavaScript 的[代理](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)机制，响应式不只局限于顶层对象或数组。通过 Stores，您可以创建响应式数据的动态树，并定位其中的嵌套属性和元素：
 
 ```jsx
-import { createStore } from "solid-js/store"
+import { createStore } from "solid-js/store";
 
 // Initialize store
 const [store, setStore] = createStore({
@@ -40,24 +37,22 @@ const [store, setStore] = createStore({
 			loggedIn: true,
 		},
 	],
-})
+});
 ```
 
-## Accessing store values
+## 访问 store 值
 
-Store properties can be accessed directly from the state proxy through directly referencing the targeted property:
+可以通过直接引用目标属性来从状态代理中访问 store 属性：
 
 ```jsx
-console.log(store.userCount) // Outputs: 3
+console.log(store.userCount); // 输出: 3
 ```
 
-Accessing stores within a tracking scope follows a similar pattern to signals.
-While signals are created using the [`createSignal`](/reference/basic-reactivity/create-signal) function and require calling the signal function to access their values, store values can be directly accessed without a function call.
-This provides access to the store's value directly within a tracking scope:
+访问追踪作用域内的 store 遵循与信号类似的模式。不过信号是使用 [createSignal](/reference/basic-reactivity/create-signal) 函数创建，并且需要调用信号函数来访问其值，但 store 可以直接访问其值，而无需调用函数。这可以直接在追踪作用域内访问 store 的值：
 
 ```jsx
 const App = () => {
-	const [mySignal, setMySignal] = createSignal("This is a signal.")
+	const [mySignal, setMySignal] = createSignal("This is a signal.");
 	const [store, setStore] = createStore({
 		userCount: 3,
 		users: [
@@ -80,23 +75,21 @@ const App = () => {
 				loggedIn: true,
 			},
 		],
-	})
+	});
 	return (
 		<div>
 			<h1>Hello, {store.users[0].username}</h1> {/* Accessing a store value */}
 			<span>{mySignal()}</span> {/* Accessing a signal */}
 		</div>
-	)
-}
+	);
+};
 ```
 
-When a store is created, it starts with the initial state but does _not_ immediately set up signals to track changes.
-These signals are created **lazily**, meaning they are only formed when accessed within a reactive context.
+创建 store 时，它从初始状态开始，但不会立即设置信号来追踪改变。这些信号是**惰性**创建的，这意味着它们仅在响应式上下文中访问时才会创建。
 
-Once data is used within a reactive context, such as within the return statement of a component function, computed property, or an effect, a signal is created and dependencies are established.
-	
-For example, if you wanted to print out every new user, adding the console log below will not work because it is not within a tracked scope.
+一旦在响应式上下文中使用数据，例如在组件函数的返回语句中、计算属性或 effect 中，就会创建信号并建立依赖关系。
 
+例如，如果您想打印出每个新用户，添加下面的控制台日志并不会起作用，因为它不在追踪作用域内。
 
 ```tsx ins={9}
 const App = () => {
@@ -119,7 +112,7 @@ const App = () => {
 }
 ```
 
-Rather, this would need to be in a tracking scope, like inside a [`createEffect`](/reference/basic-reactivity/create-effect), so that a dependency is established.
+相反，这需要位于追踪作用域内，例如在 [createEffect](/reference/basic-reactivity/create-effect) 内，以便建立依赖关系。
 
 ```tsx del={9} ins={10-12}
 const App = () => {
@@ -145,10 +138,9 @@ const App = () => {
 }
 ```
 
-## Modifying store values
+## 修改 store 值
 
-Updating values within a store is best accomplished using a setter provided by the `createStore` initialization.
-This setter allows for the modification of a specific key and its associated value, following the format `setStore(key, newValue)`:
+更新 store 中的值最好使用 `createStore` 初始化提供的 setter 来完成。此 setter 允许修改特定键及其关联值，格式为 `setStore(key, newValue)` ：
 
 ```jsx "setStore"
 const [store, setStore] = createStore({
@@ -167,7 +159,7 @@ setStore("users", (currentUsers) => [
 ])
 ```
 
-The value of `userCount` could also be automatically updated whenever a new user is added to keep it synced with the users array:
+每当添加新用户时，`userCount` 的值也可以自动更新，使其与用户数组保持同步：
 
 ```tsx ins={11}
 const App = () => {
@@ -194,12 +186,13 @@ const App = () => {
 ```
 
 <Callout>
-Separating the read and write capabilities of a store provides a valuable debugging advantage.
+将 store 的读取和写入功能分开可以提供宝贵的调试优势。
 
-This separation facilitates the tracking and control of the components that are accessing or changing the values.
+这种分离有助于追踪和控制正在访问或更改值的组件。
+
 </Callout>
 <Callout type="advanced">
-  A little hidden feature of stores is that you can also create nested stores to help with setting nested properties.
+  store 的一个隐藏功能是您还可以创建嵌套 store 以方便设置嵌套属性。
 
 ```jsx
   const [store, setStore] = createStore({
@@ -220,41 +213,35 @@ This separation facilitates the tracking and control of the components that are 
   ])
 
 ```
-  Changes made through `setUsers` will update the `store.users` property and reading `users` from this derived store will also be in sync with the values from `store.users`.
 
-  Note that the above relies on `store.users` to be set already in the existing store.
+通过 `setUsers` 所做的更改将更新 `store.users` 属性，并且从此派生 store 中读取 `users` 也会与 `store.users` 中的值同步。
+
+注意，上述内容依赖于现有 store 已经设置了 `store.users`。
 
 </Callout>
 
-## Path syntax flexibility
+## 路径语法灵活性
 
-Modifying a store using this method is referred to as "path syntax."
-In this approach, the initial arguments are used to specify the keys that lead to the target value you want to modify, while the last argument provides the new value.
+使用此方法修改 store 被称为“路径语法”。在此方法中，第一个参数用于指定要修改的目标值的键，最后一个参数提供新值。
 
-String keys are used to precisely target particular values with path syntax.
-By specifying these exact key names, you can directly retrieve the targeted information.
-However, path syntax goes beyond string keys and offers more versatility when accessing targeted values.
+字符串键名用于使用路径语法精确获得指定值。然而路径语法提供了更多的功能。
 
-Instead of employing the use of just string keys, there is the option of using an array of keys.
-This method grants you the ability to select multiple properties within the store, facilitating access to nested structures.
-Alternatively, you can use filtering functions to access keys based on dynamic conditions or specific rules.
+可以使用键名数组，此方法可以让您选择 store 中的多个属性，从而快捷访问嵌套结构。或者，您可以使用过滤函数基于动态条件或特定规则访问键值。
 
 <EraserLink
 	href="https://app.eraser.io/workspace/maDvFw5OryuPJOwSLyK9?elements=M6Y55ScNFDD_2HmRd4OJkQ"
 	preview="https://app.eraser.io/workspace/maDvFw5OryuPJOwSLyK9/preview?elements=M6Y55ScNFDD_2HmRd4OJkQ&type=embed"
 />
 
-The flexibility in path syntax makes for efficient navigation, retrieval, and modification of data in your store, regardless of the store's complexity or the requirement for dynamic access scenarios within your application.
+路径语法的灵活性有助于高效导航、检索和修改 store 中的数据，无论 store 的复杂性或者应用程序中动态访问方案要求如何。
 
-## Modifying values in arrays
+## 修改数组中的值
 
-Path syntax provides a convenient way to modify arrays, making it easier to access and update their elements.
-Instead of relying on discovering individual indices, path syntax introduces several powerful techniques for array manipulation.
+路径语法提供了一种修改数组的便捷方法，使访问和更新其元素变得更加容易。路径语法不依赖于发现单个索引，而是引入了几种强大的数组操作技术。
 
-### Appending new values
+### 追加新值
 
-To append a new element to an array within a store, you specify the target array and set the index to the desired position.
-For example, if you wanted to append the new element to the end of the array, you would set the index to `array.length`:
+要将新元素附加到 store 中的数组，您可以指定目标数组并设置期望的索引位置。举个例子，如果您想将新元素追加到数组末尾，则可以将索引设置为 `array.length` ：
 
 ```jsx
 setStore("users", (otherUsers) => [
@@ -265,7 +252,7 @@ setStore("users", (otherUsers) => [
 		location: "Nigeria",
 		loggedIn: false,
 	},
-])
+]);
 
 // can become
 
@@ -274,20 +261,20 @@ setStore("users", store.users.length, {
 	username: "michael584",
 	location: "Nigeria",
 	loggedIn: false,
-})
+});
 ```
 
-### Range specification
+### 范围标准
 
-With path syntax, you can target a subset of elements to update or modify by specifying a range of indices.
-You can do this using an array of values:
+使用路径语法，您可以通过指定索引范围来指定要更新或修改的元素子集。您可以使用一个包含多个值的数组来完成此操作：
 
 ```jsx
-setStore("users", [1, 3], "loggedIn", false)
+setStore("users", [1, 3], "loggedIn", false);
 ```
 
     <Callout>
-    If your *store* is an array, you can specify a range of indices using an object with `from` and `to` keys.
+
+如果您的 store 是一个数组，您可以使用带有 `from`和 `to`属性的对象指定索引范围：
 
 ```jsx
 const [store, setStore] = createStore([]) // A store that is an array
@@ -295,95 +282,84 @@ const [store, setStore] = createStore([]) // A store that is an array
 setStore({ from: 1, to: store.length - 1 }, "loggedIn", false)
 ```
 
-In addition to this, including the `by` key, can help you perform iterative updates within an array, which can be useful when you want to update elements at regular intervals.
-This key defines the step size for index increments, similar to a [`for` loop](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for):
+除此之外，还有一个`by`键名可以帮助您在数组中执行迭代更新。如果您想要规律更新元素，这非常有用。该键名可以定义索引增量的步长，类似于 [for 循环](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for)。
 
 ```jsx
-setStore({ from: 0, to: store.length, by: 2 }, "loggedIn", false)
+setStore({ from: 0, to: store.length, by: 2 }, "loggedIn", false);
 ```
 
     </Callout>
 
-### Dynamic value assignment
+### 动态赋值
 
-Path syntax also provides a way to set values within an array using functions instead of static values.
-These functions receive the old value as an argument, allowing you to compute the new value based on the existing one.
-This dynamic approach is particularly useful for complex transformations.
+路径语法还提供了一种使用函数而不是静态值在数组中设置值的方法。这些函数接收旧值作为参数，允许您根据现有值计算新值。这种动态方法对于复杂的转换特别有用。
 
 ```jsx
-setStore("users", 3, "loggedIn" , (loggedIn) => !loggedIn)
+setStore("users", 3, "loggedIn", (loggedIn) => !loggedIn);
 ```
 
-### Filtering values
+### 过滤值
 
-In scenarios where you want to update elements in an array based on a specific condition, you can pass a function as an argument.
-This function will act as a filter, allowing you to select elements that satisfy the condition.
-It receives the old value and index as arguments, providing the flexibility to make conditional updates.
+在您想要根据特定条件更新数组中的元素的情况下，您可以传递函数作为参数。此函数将充当过滤器，允许您选择满足条件的元素。它接收旧值和索引作为参数，提供了进行条件更新的灵活性。
 
 ```jsx
-setStore("users", (user) => user.username.startsWith("t"), "loggedIn", false)
+setStore("users", (user) => user.username.startsWith("t"), "loggedIn", false);
 ```
 
-In addition to [`.startsWith`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith), you can use other array methods like [`.find`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find) to filter for the values that you need.
+除了 [.startsWith](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith) 之外，您还可以使用 [.find](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find) 等其他数组方法来过滤所需的值。
 
-## Modifying objects
+## 修改对象
 
-When using store setters to modify objects, if a new value is an object, it will be shallow merged with the existing value.
-What this refers to is that the properties of the existing object will be combined with the properties of the "new" object you are setting, updating any overlapping properties with the values from the new object.
+当使用 store setter 修改对象时，如果新值是一个对象，它将与现有值进行浅合并。这指的是现有对象的属性将与您正在设置的“新”对象的属性合并，用新对象的值更新任何相同的属性。
 
-What this means, is that you can directly make the change to the store _without_ spreading out properties of the existing user object.
+这意味着您可以直接对 store 进行更改，而无需扩展现有用户对象的属性。
 
 ```jsx
 setStore("users", 0, {
 	id: 109,
-})
+});
 
 // is equivalent to
 
 setStore("users", 0, (user) => ({
 	...user,
 	id: 109,
-}))
+}));
 ```
 
-## Store utilities
+## Store 工具函数
 
-### Store updates with `produce`
+### 使用 `produce` 更新 Store
 
-Rather than directly modifying a store with setters, Solid has the `produce` utility.
-This utility provides a way to work with data as if it were a [mutable](https://developer.mozilla.org/en-US/docs/Glossary/Mutable) JavaScript object.
-`produce` also provides a way to make changes to multiple properties at the same time which eliminates the need for multiple setter calls.
+Solid 没有使用 setter 直接修改 store，而是提供了 `produce` 工具函数。该工具函数提供了一种类似于处理[可变](https://developer.mozilla.org/en-US/docs/Glossary/Mutable) JavaScript 对象的方式处理数据。 `produce` 还提供了一种同时修改多个属性的方法，从而消除了调用多个 setter 的需要。
 
 ```jsx
-import { produce } from "solid-js/store"
+import { produce } from "solid-js/store";
 
 // without produce
-setStore("users", 0, "username", "newUsername")
-setStore("users", 0, "location", "newLocation")
+setStore("users", 0, "username", "newUsername");
+setStore("users", 0, "location", "newLocation");
 
 // with produce
 setStore(
 	"users",
 	0,
 	produce((user) => {
-		user.username = "newUsername"
-		user.location = "newLocation"
+		user.username = "newUsername";
+		user.location = "newLocation";
 	})
-)
+);
 ```
 
-`produce` and `setStore` do have distinct functionalities.
-While both can be used to modify the state, the key distinction lies in how they handle data.
-`produce` allows you to work with a temporary draft of the state, apply the changes, then produce a new [immutable](https://developer.mozilla.org/en-US/docs/Glossary/Immutable) version of the store.
-Comparatively, `setStore` provides a more straightforward way to update the store directly, without creating a new version.
+`produce` 和 `setStore` 具有不同的功能。虽然两者都可以用来修改状态，但关键区别在于它们处理数据的方式。
 
-It's important to note, however, `produce` is specifically designed to work with **arrays** and **objects**.
-Other collection types, such as JavaScript [Sets](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set) and [Maps](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map), are not compatible with this utility.
+`produce` 允许您使用状态的临时草稿，应用更改，然后生成 store 新的[不可变](https://developer.mozilla.org/en-US/docs/Glossary/Immutable)版本。相比之下，setStore 提供了更直接的方式来直接更新 store，而不会创建新版本。
 
-### Data integration with `reconcile`
+值得注意的是，`produce` 是专门为处理数组和对象而设计的。其他集合类型（例如 JavaScript [Sets](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set) 和 [Maps](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map) ）与此工具函数不兼容。
 
-When new information needs to be merged into an existing store `reconcile` can be useful.
-`reconcile` will determine the differences between new and existing data and initiate updates only when there are _changed_ values, thereby avoiding unnecessary updates.
+### 使用 `reconcile` 数据集成
+
+当需要将新信息合并到现有 store 中时，`reconcile` 可能很有用。 `reconcile` 会判断新数据和现有数据之间的差异，只有当有发生变化的值时才发起更新，从而避免不必要的更新。
 
 ```jsx
 const { createStore, reconcile } from "solid-js/stores"
@@ -397,27 +373,24 @@ setData('animals', reconcile(newData))
 
 ```
 
-In this example, the store will look for the differences between the existing and incoming data sets.
-Consequently, only `'koala'` - the new edition - will cause an update.
+在这个例子中，store 将查找现有数据集和传入数据集之间的差异。因此，只有 `'koala'`，这个新版本才会导致更新。
 
-### Extracting raw data with `unwrap`
+### 使用 `unwrap` 提取原始数据
 
-When there is a need for dealing with data outside of a reactive context, the `unwrap` utility offers a way to transform a store to a standard [object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object).
-This conversion serves several important purposes.
+当需要处理响应式上下文之外的数据时，`unwrap`工具函数提供了一种将 store 转换为标准[对象](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)的方法。这种转换有几个重要的目的。
 
-Firstly, it provides a snapshot of the current state without the processing overhead associated with reactivity.
-This can be useful in situations where an unaltered, non-reactive view of the data is needed.
-Additionally, `unwrap` provides a means to interface with third-party libraries or tools that anticipate regular JavaScript objects.
-This utility acts as a bridge to facilitate smooth integrations with external components and simplifies the incorporation of stores into various applications and workflows.
+首先，它提供了当前状态的快照，而无需响应式相关的处理开销。这在需要未更改的、非响应式数据视图的情况下非常有用。
+
+此外，`unwrap` 提供了一种与常规 JavaScript 对象的第三方库或工具进行交互的方法。该工具函数充当桥梁，促进与外部组件的顺利集成，并简化将 store 合并到各种应用程序和工作流程中的过程。
 
 ```jsx
-import { createStore, unwrap } from "solid-js/store"
+import { createStore, unwrap } from "solid-js/store";
 
 const [data, setData] = createStore({
 	animals: ["cat", "dog", "bird", "gorilla"],
-})
+});
 
-const rawData = unwrap(data)
+const rawData = unwrap(data);
 ```
 
-To learn more about how to use Stores in practice, visit the [guide on complex state management](/guides/complex-state-management).
+要了解有关如何在实践中使用 Stores 的更多信息，请访问[复杂状态管理指南](/guides/complex-state-management)。

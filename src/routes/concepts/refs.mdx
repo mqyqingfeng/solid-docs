@@ -2,41 +2,35 @@
 title: Refs
 ---
 
-Refs, or references, are a special attribute that can be attached to any element, and are used to reference a DOM element or a component instance.
-They are particularly useful when you need to access the DOM nodes directly or invoke methods on a component.
+Refs 是可以附加到任何元素的特殊属性，用于引用 DOM 元素或组件实例。当您需要直接访问 DOM 节点或调用组件上的方法时，它们特别有用。
 
-## Accessing DOM elements
+## 访问 DOM 元素
 
-One way of accessing DOM elements is through [element selectors](https://developer.mozilla.org/en-US/docs/Web/API/Document_object_model/Locating_DOM_elements_using_selectors) such as [`document.querySelector`](https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector) or [`document.getElementById`](https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById).
-Since elements in Solid can be added or removed from the DOM based on state, you need to wait until the element is attached to the DOM before accessing it.
-This can be done by using [`onMount`](/reference/lifecycle/on-mount) to wait until the element is attached to the DOM before accessing it:
+访问 DOM 元素的一种方法是通过[元素选择器](https://developer.mozilla.org/en-US/docs/Web/API/Document_object_model/Locating_DOM_elements_using_selectors)，例如 [document.querySelector](https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector) 或 [document.getElementById](https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById) 。由于 Solid 中的元素可以根据状态添加到 DOM 或从 DOM 中删除，因此您需要等到该元素挂载到 DOM 后才能访问它。这可以通过使用 [onMount](/reference/lifecycle/on-mount) 等待元素挂载到 DOM 后再访问它来完成。
 
-Accessing DOM elements through element selectors is not recommended for this reason.
-As elements with the same selectors are added and removed from the DOM, the first element that matches the selector will be returned, which may not be the element you want.
+因此，不建议通过元素选择器访问 DOM 元素。当在 DOM 中添加和删除具有相同选择器的元素时，将返回与选择器匹配的第一个元素，该元素可能不是您想要的元素。
 
-## JSX as a value
+## JSX 作为一个值
 
-JSX can be used as a value and assigned to a variable when looking to directly access DOM elements.
+当想要直接访问 DOM 元素时，JSX 可以用作值并分配给变量。
 
 ```tsx
 function Component() {
-	const myElement = <p>My Element</p>
+	const myElement = <p>My Element</p>;
 
-	return <div>{myElement}</div>
+	return <div>{myElement}</div>;
 }
 ```
 
-This lets you create and access DOM elements similar to [`document.createElement`](https://developer.mozilla.org/en-US/docs/Web/API/Document/createElement) but without having to wait until it is attached to the DOM. 
-It can be used multiple times without having to worry about duplicate selectors.
+这使您可以创建和访问类似于 [document.createElement](https://developer.mozilla.org/en-US/docs/Web/API/Document/createElement) 的 DOM 元素，但不必等到它挂载到 DOM。它可以多次使用，而不必担心重复的选择器。
 
-The downside to this approach is it separates the element and any child elements from the rest of the JSX structure. 
-This makes the component's JSX structure more difficult to read and understand.
+这种方法的缺点是它将元素和任何子元素与 JSX 结构的其余部分分开。这使得组件的 JSX 结构更难以阅读和理解。
 
-## Refs in Solid
+## Solid 中的 Refs
 
-Solid provides a ref system to access DOM elements directly inside the JSX template, which keeps the structure of the elements intact.
+Solid 提供了一个引用系统直接在 JSX 模板内访问 DOM 元素，从而保持元素结构的完整性。
 
-To use [`ref`](/reference/jsx-attributes/ref), you declare a variable and use it as the `ref` attribute:
+要使用 [ref](/reference/jsx-attributes/ref) ，您需要声明一个变量并将其用作 ref 属性：
 
 ```tsx {6}
 function Component() {
@@ -46,40 +40,39 @@ function Component() {
 		<div>
 			<p ref={myElement}>My Element</p>
 		</div>
-	)
+	);
 }
 ```
 
-These assignments occur at _creation time_ prior to the element being added to the DOM.
-If access to an element is needed before it is added to the DOM, you can use the callback form of `ref`:
+这些赋值发生在创建时，在将元素添加到 DOM 之前。
+
+如果在将元素添加到 DOM 之前需要访问该元素，可以使用 ref 的回调形式：
 
 ```jsx
-<p ref={(el) => {
-	myElement = el // el is created but not yet added to the DOM
-	}}>
+<p
+	ref={(el) => {
+		myElement = el; // el is created but not yet added to the DOM
+	}}
+>
 	My Element
 </p>
 ```
 
 <Callout>
-In TypeScript, you must use a definitive assignment assertion. 
-Since Solid takes care of assigning the variable when the component is rendered, this signals to TypeScript that the variable will be assigned, even if it can't
-confirm it. 
-	
-```tsx
-let myElement!: HTMLDivElement; 
-```
+	在 TypeScript 中，您必须使用明确的赋值断言。由于 Solid
+	在渲染组件时负责分配变量，因此这会向 TypeScript
+	发出信号，表明该变量将被分配，即使它无法确认。 
+  ```tsx let myElement!:HTMLDivElement; ```
 </Callout>
 
-### Signals as refs
+### Signals 作为 refs
 
-[Signals](/concepts/signals) can also be used as refs.
-This is useful when you want to access the element directly, but the element may not exist when the component is first rendered, or may be removed from the DOM at some point.
+[信号](/concepts/signals)也可以用作 refs。当您想要直接访问元素，但该元素在组件首次渲染时可能不存在，或者可能在某个时刻从 DOM 中删除时，这很有用。
 
 ```jsx
 function App() {
-	const [show, setShow] = createSignal(false)
-	const [element, setElement] = createSignal()
+	const [show, setShow] = createSignal(false);
+	const [element, setElement] = createSignal();
 
 	return (
 		<div>
@@ -89,46 +82,48 @@ function App() {
 				<p ref={setElement}>This is the ref element</p>
 			</Show>
 		</div>
-	)
+	);
 }
 ```
 
-In this example, the paragraph element is only rendered when the `show` signal is `true`.
-When the component initializes, the paragraph element does not exist, so the `element` variable is not assigned.
-Once the `show` signal is set to `true`, the paragraph element is rendered, and the `element` variable is assigned to the paragraph element.
+在这个例子中，仅当 `show` 信号为 `true` 时才会渲染段落元素。组件初始化时，段落元素不存在，因此 `element` 变量未赋值。一旦 `show` 信号设置为 `true` ，就会渲染段落元素，并将 `element` 变量分配给段落元素。
 
-You can see a detailed view of the ref update lifecycle in this [Solid playground example](https://playground.solidjs.com/anonymous/22a1abfa-a0f5-44a6-bbe6-40387cf63b95).
 
-## Forwarding refs
+您可以在 [Solid Playground 示例](https://playground.solidjs.com/anonymous/22a1abfa-a0f5-44a6-bbe6-40387cf63b95)中更具体的查看 ref 更新生命周期。
 
-Forwarding refs is a technique that allows you to pass a ref from a parent component to a child component.
-This is useful when you want to access the DOM element of a child component from the parent component.
+## 转发 refs
 
-To forward a ref, you need to pass the ref to the child component, and then assign the ref to the child component's element.
+转发 refs 是一种允许您将 ref 从父组件传递到子组件的技术。当您想要从父组件访问子组件的 DOM 元素时，这非常有用。
 
-When a child component receives a `ref` attribute from its parent, the `ref` is passed as a callback function.
-This is regardless of whether the parent passed it as a simple assignment or a callback.
 
-Once the child component receives the `ref`, it can be assigned to the element that the child component wants to expose through the `ref` attribute.
-To access the `ref` in the child component, it is passed as a prop:
+
+要转发 ref，您需要将 ref 传递给子组件，然后将 ref 分配给子组件的元素。
+
+
+
+当子组件从其父组件接收到 `ref` 属性时，ref 将作为回调函数传递。这与父级是将其作为简单赋值还是回调传递无关。
+
+
+
+一旦子组件收到 ref ，就可以通过 ref 属性将其分配给子组件想要公开的元素。要访问子组件中的 ref，请将其作为 prop 传递：
 
 ```tsx
 // Parent component
-import { Canvas } from "./Canvas.jsx"
+import { Canvas } from "./Canvas.jsx";
 
 function ParentComponent() {
-	let canvasRef
+	let canvasRef;
 
 	const animateCanvas = () => {
 		// Manipulate the canvas using canvasRef...
-	}
+	};
 
 	return (
 		<div>
 			<Canvas ref={canvasRef} />
 			<button onClick={animateCanvas}>Animate Canvas</button>
 		</div>
-	)
+	);
 }
 
 // Child component
@@ -137,42 +132,41 @@ function Canvas(props) {
 		<div className="canvas-container">
 			<canvas ref={props.ref} /> {/* Assign the ref to the canvas element */}
 		</div>
-	)
+	);
 }
 ```
 
-In this example, the `canvas` element is directly assigned the `ref` attribute through the `props.ref` variable.
-This forwards the reference to the parent component, giving it direct access to the `canvas` element.
+在这个例子中，通过 `props.ref` 变量直接为 `canvas` 元素分配 `ref` 属性。这会将 ref 转发到父组件，使其可以直接访问 canvas 元素。
 
-## Directives
+## 指令（Directives）
 
-Directives allow the attachment of reusable behaviours to DOM elements.
-The [`use:`](/reference/jsx-attributes/use) prefix is used to denote these custom directives.
-Unlike props or attributes, directives operate at a lower level through providing fine-grained control over the elements they are attached to.
+指令允许将可复用行为附加到 DOM 元素。 `use:` 前缀用于表示这些自定义指令。与 props 或 attribute 不同，指令通过对其附加的元素提供细粒度的控制来在较低级别上运行。
 
-Directives are like callback refs but they enable two extra features:
 
-- Having multiple directives on an element.
-- Passing in reactive data to the callback.
 
-A directive is essentially a function with a specific signature:
+指令类似于回调引用，但它们支持两个额外的功能：
+
++ 一个元素上有多个指令。
++ 将响应式数据传递给回调。
+
+
+
+指令本质上是一个具有特定签名的函数：
 
 ```typescript
-function directive(element: Element, accessor: () => any): void
-
+function directive(element: Element, accessor: () => any): void;
 ```
 
-- `element`: The DOM element that the directive is applied to.
-- `accessor`: A function that gives access to the value(s) passed to the directive.
+- `element`: 应用指令的 DOM 元素。
+- `accessor`: 一个可以访问传递给指令的值的函数。
 
-The directive functions are called at render time, but are called before the element is added to the DOM.
-Due to this order, elements are fully primed with their attributes, properties, or event listeners, therefore minimizing unexpected behaviors or premature interactions.
+指令函数在渲染时调用，但在元素添加到 DOM 之前调用。由于这个顺序，元素可以完全准备好它们的特性、属性或事件监听器，从而最大限度地减少意外行为或过早的交互。
 
-Within directives, you're able to perform a variety of tasks, including:
+在指令中，您可以执行各种任务，包括：
 
-- creating [signals](/concepts/signals)
-- initiating [effects](/guides/state-management#reacting-to-changes)
-- adding [event listeners](/concepts/components/event-handlers)
-- and more.
+- 创造  [signals](/concepts/signals)
+- 初始化 [effects](/guides/state-management#reacting-to-changes)
+- 添加 [事件监听器](/concepts/components/event-handlers)
+- 等等
 
-To learn more about directives and how they work with TypeScript, refer to our [TypeScript for Solid guide](/configuration/typescript).
+要了解更多有关指令及其如何与 TypeScript 配合使用的信息，请参阅我们的 [TypeScript for Solid](/configuration/typescript) 指南 。
